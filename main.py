@@ -9,8 +9,7 @@ def main():
     N = 20        # dimensione griglia
     T = 2.0       # temperatura
     J = 1.0       # costante di accoppiamento
-
-    print("Progetto Ising – struttura OK")
+    
     print("Dimensione:", N)
     print("Temperatura:", T)
 
