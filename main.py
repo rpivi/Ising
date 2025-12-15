@@ -1,6 +1,6 @@
 import utils as ut
 import lattice as lat
-import observables as obs
+import physical_quant as obs
 import plot as pl
 import metropolis as metro
 
