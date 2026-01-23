@@ -1,21 +1,17 @@
-import random
+import numpy as np
 
-def create_lattice (L, initial_state='random'):
+def create_lattice(L, initial_state='random'):
     if initial_state == 'random':
-        return [[random.choice([-1,1]) for _ in range(L)]for _ in range(L)]
+        init_random = np.random.rand(L,L)
+        lattice = np.where(init_random < 0.6, -1, 1) # 60% spin down, 40% spin up
+        return lattice
     elif initial_state == 'up':
-        return [[1 for _ in range(L)]for _ in range(L)]
+        return np.ones((L, L), dtype=int)
     elif initial_state == 'down':
-        return [[-1 for _ in range(L)]for _ in range(L)]
+        return -np.ones((L, L), dtype=int)
     else:
-        print("Invalid initial state. Choose 'random', 'up', or 'down'.")
-
-def flip_random_spin(lattice):
-    i = random.randrange(len(lattice))
-    j = random.randrange(len(lattice))
-    lattice[i][j] *= -1
-    return (i, j)
+        raise ValueError("Choose 'random', 'up', or 'down'")
 
 def print_lattice(lattice):
     for row in lattice:
-        print(row)
+        print(" ".join(f"{s:2d}" for s in row))
