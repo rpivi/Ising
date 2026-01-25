@@ -3,7 +3,7 @@ import numpy as np
 def create_lattice(L, initial_state='random'):
     if initial_state == 'random':
         init_random = np.random.rand(L,L)
-        lattice = np.where(init_random < 0.6, -1, 1) # 60% spin down, 40% spin up
+        lattice = np.where(init_random < 0.5, -1, 1)
         return lattice
     elif initial_state == 'up':
         return np.ones((L, L), dtype=int)
