@@ -1,4 +1,3 @@
-import utils as ut
 import lattice as lat
 import physical_quant as ph
 import plot as plot
