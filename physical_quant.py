@@ -30,6 +30,8 @@ def total_energy(spins):
 def magnetization(spins):
     return np.sum(spins)
 
+
+#da riguardare
 def susceptibility(magnetizations, BJ, N):
     mean_m = np.mean(magnetizations)
     mean_m2 = np.mean(np.array(magnetizations)**2)
