@@ -26,20 +26,5 @@ def total_energy(spins):
     arr = - spins * convolve(spins, kern, mode='wrap', cval=0)
     return arr.sum()/2
     
-   
 def magnetization(spins):
     return np.sum(spins)
-
-
-#da riguardare
-def susceptibility(magnetizations, BJ, N):
-    mean_m = np.mean(magnetizations)
-    mean_m2 = np.mean(np.array(magnetizations)**2)
-    chi = (mean_m2 - mean_m**2) * BJ * N
-    return chi
-
-def heat_capacity(energies, BJ, N):
-    mean_e = np.mean(energies)
-    mean_e2 = np.mean(np.array(energies)**2)
-    C = (mean_e2 - mean_e**2) * BJ**2 * N
-    return C
