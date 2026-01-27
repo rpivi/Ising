@@ -6,19 +6,50 @@ import numpy as np
 
 def main():
 
+# Part1: Thermalization analysis of different initial states at fixed BJ ########
     L = 50  # Lattice size
     N = L * L  # Total number of spins
     BJ = 0.7  # Inverse temperature
-    nsweep = 500  # Number of sweeps
+    nsweep_therm = 500  # Number of sweeps
 
     spins_r = lat.create_lattice(L, initial_state='random')
     spins_u = lat.create_lattice(L, initial_state='up')
 
-    net_spins_r, net_energies_r = metro.metropolis(spins_r, nsweep, BJ)
-    net_spins_u, net_energies_u = metro.metropolis(spins_u, nsweep, BJ)
+    magn_r, tot_energies_r, spins_r = metro.metropolis(spins_r, nsweep_therm, BJ)
+    magn_u, tot_energies_u, spins_u= metro.metropolis(spins_u, nsweep_therm, BJ)
 
-    plot.plot_two_steps(net_spins_r/N, net_spins_u/N, name1="Mean Spins (Random Init)", name2="Mean Spins (Up Init)", BJ=BJ)
-    plot.plot_two_steps(net_energies_r, net_energies_u, name1="Net Energy (Random Init)", name2="Net Energy (Up Init)", BJ=BJ)
+    plot.plot_two_steps(magn_r/N, magn_u/N, name="Mean Magnetization", name1="Random Init", name2="Up Init", BJ=BJ)
+    plot.plot_two_steps(tot_energies_r, tot_energies_u, name="Total Energy", name1="Random Init", name2="Up Init", BJ=BJ)
+    print("Thermalization analysis completed and plots saved.")
+
+# Part2: Phase transition analysis  #############################################
+    BJ_s = [0.1,0.2, 0.4, 0.44, 0.5, 0.7, 1.0, 1.5, 2.0, 3.0]
+
+    mean_magnetizations = []
+    mean_energies = []
+    heat_capacity = []
+    susceptibility = []
+
+     # Loop over different BJ values
+    for BJ in BJ_s:
+        #thermalization
+        spins = lat.create_lattice(L, initial_state='random')
+        metro.metropolis(spins, nsweep_therm, BJ)
+
+        #measurement of mean magnetization, mean energy, heat capacity and susceptibility
+        nsweep_meas = 300
+        net_spins, net_energies, spins = metro.metropolis(spins, nsweep_meas, BJ)
+        mean_magnetizations.append(np.mean(net_spins)/N)
+        mean_energies.append(np.mean(net_energies)/N)
+        heat_capacity.append(ph.heat_capacity(net_energies, BJ, N))
+        susceptibility.append(ph.susceptibility(net_spins, BJ, N))
+        print(f"Completed measurements at BJ={BJ}")
+
+    # Plot observables vs BJ
+    plot.plot_vs_BJ(BJ_s, mean_magnetizations, name="Mean Magnetization")
+    plot.plot_vs_BJ(BJ_s, mean_energies, name="Mean Energy")
+    plot.plot_vs_BJ(BJ_s, heat_capacity, name="Heat Capacity")
+    plot.plot_vs_BJ(BJ_s, susceptibility, name="Susceptibility")
 
 if __name__ == "__main__":
     main()

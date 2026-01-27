@@ -29,9 +29,8 @@ def metropolis(spins, nsweep, BJ):
         if (dE <= 0 ) or (np.random.rand() < np.exp(-BJ * dE)):
             spins_arr[i, j] = spin_f
             energy += dE
-        if (t % (L*L) == 0):
-            s = t//(L*L)
-            print(f"Sweep {s} / {nsweep} completed.")
-            net_spins[s] = abs(spins_arr.sum())
+        if ((t+1)% (L*L) == 0):
+            s = (t+1)//(L*L) -1
+            net_spins[s] = ph.magnetization(spins_arr)
             net_energies[s] = energy
-    return net_spins, net_energies
+    return net_spins, net_energies, spins_arr
