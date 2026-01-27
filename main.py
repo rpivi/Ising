@@ -10,7 +10,7 @@ def main():
     L = 50  # Lattice size
     N = L * L  # Total number of spins
     BJ = 0.7  # Inverse temperature
-    nsweep_therm = 500  # Number of sweeps
+    nsweep_therm = 700  # Number of sweeps
 
     spins_r = lat.create_lattice(L, initial_state='random')
     spins_u = lat.create_lattice(L, initial_state='up')
@@ -23,7 +23,7 @@ def main():
     print("Thermalization analysis completed and plots saved.")
 
 # Part2: Phase transition analysis  #############################################
-    BJ_s = [0.1,0.2, 0.4, 0.44, 0.5, 0.7, 1.0, 1.5, 2.0, 3.0]
+    BJ_s = [0.1,0.2,0.3,0.4,0.41,0.42,0.44,0.46,0.5,0.6,0.7,0.8,1.0,1.5, 2.0, 2.5, 3.0]
 
     mean_magnetizations = []
     mean_energies = []
@@ -37,7 +37,7 @@ def main():
         _,_,spins = metro.metropolis(spins, nsweep_therm, BJ)
 
         #measurement of mean magnetization, mean energy, heat capacity and susceptibility
-        nsweep_meas = 300
+        nsweep_meas = 400 # Number of sweeps for measurement = number of samples at each BJ
         net_spins, net_energies, _ = metro.metropolis(spins, nsweep_meas, BJ)
         mean_magnetizations.append(np.mean(net_spins)/N)
         mean_energies.append(np.mean(net_energies)/N)
