@@ -34,11 +34,11 @@ def main():
     for BJ in BJ_s:
         #thermalization
         spins = lat.create_lattice(L, initial_state='random')
-        metro.metropolis(spins, nsweep_therm, BJ)
+        _,_,spins = metro.metropolis(spins, nsweep_therm, BJ)
 
         #measurement of mean magnetization, mean energy, heat capacity and susceptibility
         nsweep_meas = 300
-        net_spins, net_energies, spins = metro.metropolis(spins, nsweep_meas, BJ)
+        net_spins, net_energies, _ = metro.metropolis(spins, nsweep_meas, BJ)
         mean_magnetizations.append(np.mean(net_spins)/N)
         mean_energies.append(np.mean(net_energies)/N)
         heat_capacity.append(ph.heat_capacity(net_energies, BJ, N))
