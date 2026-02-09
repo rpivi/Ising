@@ -8,7 +8,7 @@ import pca as pca
 def main():
 
 # Part1: Thermalization analysis of different initial states at fixed BJ
-    L = 50  # Lattice size
+    L = 20  # Lattice size
     N = L * L  # Total number of spins
     BJ = 0.7  # Inverse temperature
     nsweep_therm = 700  # Number of sweeps
@@ -50,6 +50,7 @@ def main():
         mean_energies.append(np.mean(net_energies)/N)
         heat_capacity.append(ph.heat_capacity(net_energies, BJ, N))
         susceptibility.append(ph.susceptibility(net_spins, BJ, N))
+        #saving configurations for PCA 
         spins_configs.append(configs)
         print(f"Completed measurements at BJ={BJ}")
 
