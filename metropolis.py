@@ -6,8 +6,9 @@ def metropolis(spins, nsweep,sweeps_skip ,BJ, return_configs=False):
     energy = ph.total_energy(spins_arr)
     L = spins_arr.shape[0]
     steps = nsweep * L * L
-    net_spins = np.zeros(nsweep)
-    net_energies = np.zeros(nsweep)
+    n_measurements = nsweep // sweeps_skip
+    net_spins = np.zeros(n_measurements)
+    net_energies = np.zeros(n_measurements)
     configs = []
 
     for t in range(steps):
@@ -27,12 +28,13 @@ def metropolis(spins, nsweep,sweeps_skip ,BJ, return_configs=False):
             energy += dE
 
         if (t+1) % (L*L) == 0:
-            s = (t+1)//(L*L) - 1 #sweep index starting from 0
-            if s%sweeps_skip == 0:  # save configurations and measurements every sweeps_skip sweeps
-                net_spins[s] = ph.abs_magnetization(spins_arr)
-                net_energies[s] = energy
-                if return_configs:
-                    configs.append(spins_arr.copy())
+            sweep_idx = (t+1)//(L*L) - 1
+        if sweep_idx % sweeps_skip == 0:
+            save_idx = sweep_idx // sweeps_skip
+            net_spins[save_idx] = ph.abs_magnetization(spins_arr)
+            net_energies[save_idx] = energy
+            if return_configs:
+                configs.append(spins_arr.copy())
 
     if return_configs:
         return net_spins, net_energies, spins_arr, configs

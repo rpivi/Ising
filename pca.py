@@ -2,32 +2,47 @@ from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt 
 import numpy as np
 
+def prepare_pca_data(spins_configs_nested, BJ_s):
+    all_configs = []
+    BJ_labels = []
+    
+    for BJ, configs in zip(BJ_s, spins_configs_nested):
+        all_configs.extend(configs)
+        BJ_labels.extend([BJ] * len(configs))
+    
+    return all_configs, BJ_labels
 
-def perform_pca(spins_configs, n_components=2):
-    #spins configs is a list of 2D arrays of shape (L, L) for different BJ values
-    # Flatten each 2D configuration into a 1D vector
-    X = []
-    for config in spins_configs:
-        X.append(config.flatten())
+
+def perform_pca(configs_flat, n_components=2):
+    # Appiattisci ogni configurazione 2D in vettore 1D
+    X = np.array([config.flatten() for config in configs_flat])
+    
     pca = PCA(n_components=n_components)
     X_pca = pca.fit_transform(X)
+    
     return X_pca, pca.explained_variance_ratio_
 
-def pca_plot(X_pca, BJ_s, spins_configs):
-
-    BJ_labels = [] 
-    for beta, configs in zip(BJ_s, spins_configs):
-        for cfg in configs:
-            BJ_labels.append(beta)
-
+def pca_plot(X_pca, BJ_labels, explained_variance_ratio=None):
     BJ_labels = np.array(BJ_labels)
-
-    plt.figure(figsize=(8,6))
-    scatter = plt.scatter(X_pca[:, 0], X_pca[:, 1], c=BJ_labels, cmap='viridis')
-    plt.colorbar(scatter, label='BJ')
-    plt.title("PCA of Spin Configurations")
-    plt.xlabel("Principal Component 1")
-    plt.ylabel("Principal Component 2")
-    plt.grid()
-    plt.savefig("PCA_spin_configurations.png")
+    
+    plt.figure(figsize=(10, 7))
+    scatter = plt.scatter(X_pca[:, 0], X_pca[:, 1], 
+                         c=BJ_labels, cmap='viridis', 
+                         s=50, alpha=0.7, edgecolors='black', linewidth=0.5)
+    
+    cbar = plt.colorbar(scatter, label='β/J')
+    
+    if explained_variance_ratio is not None:
+        xlabel = f"PC1 ({explained_variance_ratio[0]*100:.1f}% var)"
+        ylabel = f"PC2 ({explained_variance_ratio[1]*100:.1f}% var)"
+    else:
+        xlabel = "Principal Component 1"
+        ylabel = "Principal Component 2"
+    
+    plt.xlabel(xlabel, fontsize=12)
+    plt.ylabel(ylabel, fontsize=12)
+    plt.title("PCA of Spin Configurations - Ising Model", fontsize=14)
+    plt.grid(alpha=0.3)
+    plt.tight_layout()
+    plt.savefig("PCA_spin_configurations.png", dpi=300)
     plt.close()

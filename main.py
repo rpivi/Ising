@@ -26,7 +26,7 @@ def main():
     print("Thermalization analysis completed and plots saved.")
 
 # Part2: Phase transition analysis 
-    T_s = [1.5,2.,2.1,2.2,2.25,2.26,2.27,2.28,2.29,2.3,2.4,2.5,3]
+    T_s = [1.5,2.,2.2,2.25,2.26,2.27,2.28,2.29,2.3,2.4,2.5,3]
     BJ_s =[ 1/T for T in T_s]
     spins_configs= []
 
@@ -45,12 +45,12 @@ def main():
         nsamples = 200
         sweeps_skip = 50
         nsweep_meas = nsamples * sweeps_skip
-        net_spins, net_energies, _, spins_configs = metro.metropolis(spins, nsweep_meas,sweeps_skip,BJ, return_configs=True)
+        net_spins, net_energies, _, configs = metro.metropolis(spins, nsweep_meas,sweeps_skip,BJ, return_configs=True)
         mean_magnetizations.append(np.mean(net_spins)/N)
         mean_energies.append(np.mean(net_energies)/N)
         heat_capacity.append(ph.heat_capacity(net_energies, BJ, N))
         susceptibility.append(ph.susceptibility(net_spins, BJ, N))
-        spins_configs.append(spins) # Store the final spin configuration for PCA analysis
+        spins_configs.append(configs)
         print(f"Completed measurements at BJ={BJ}")
 
     # Plot observables vs BJ
@@ -60,9 +60,9 @@ def main():
     plot.plot_vs_BJ(BJ_s, susceptibility, name="Susceptibility")
 
 # Part3: PCA analysis of spin configurations at different BJ values
-    X_pca, explained_variance_ratio = pca.perform_pca(spins_configs, n_components=2)
-    pca.pca_plot(X_pca, BJ_s)
-    print("PCA analysis completed.")
+    all_configs, BJ_labels = pca.prepare_pca_data(spins_configs, BJ_s)
+    X_pca , explained_var_ratio= pca.perform_pca(all_configs, n_components=2)
+    pca.pca_plot(X_pca, BJ_labels, explained_var_ratio)
 
 if __name__ == "__main__":
     main()
