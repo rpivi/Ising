@@ -24,7 +24,7 @@ def plot_two_steps(obs1, obs2, name="Observable", name1="Observable 1", name2="O
     plt.title(f"{name} vs Monte Carlo time at BJ={BJ}")
     plt.xlabel("t [Monte Carlo]")
     plt.ylabel(name)
-    plt.legend([f"{name1})", f"{name2}"])
+    plt.legend([f"{name1}", f"{name2}"])
     #save figure    
     plt.savefig(f"{name}_{BJ}.png")
     plt.close()

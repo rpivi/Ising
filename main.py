@@ -12,13 +12,14 @@ def main():
     N = L * L  # Total number of spins
     BJ = 0.7  # Inverse temperature
     nsweep_therm = 700  # Number of sweeps
+    sweep_skip_therm = 5
     np.random.seed(42)
 
     spins_r = lat.create_lattice(L, initial_state='random')
     spins_u = lat.create_lattice(L, initial_state='up')
 
-    magn_r, tot_energies_r, spins_r = metro.metropolis(spins_r, nsweep_therm, BJ)
-    magn_u, tot_energies_u, spins_u= metro.metropolis(spins_u, nsweep_therm, BJ)
+    magn_r, tot_energies_r, spins_r = metro.metropolis(spins_r, nsweep_therm,sweep_skip_therm, BJ)
+    magn_u, tot_energies_u, spins_u= metro.metropolis(spins_u, nsweep_therm,sweep_skip_therm, BJ)
 
     plot.plot_two_steps(magn_r/N, magn_u/N, name="Mean Magnetization", name1="Random Init", name2="Up Init", BJ=BJ)
     plot.plot_two_steps(tot_energies_r, tot_energies_u, name="Total Energy", name1="Random Init", name2="Up Init", BJ=BJ)
@@ -38,13 +39,13 @@ def main():
     for BJ in BJ_s:
         #thermalization
         spins = lat.create_lattice(L, initial_state='random')
-        _,_,spins = metro.metropolis(spins, nsweep_therm, BJ)
+        _,_,spins = metro.metropolis(spins, nsweep_therm,sweep_skip_therm, BJ)
 
         #measurement of mean magnetization, mean energy, heat capacity and susceptibility
         nsamples = 200
         sweeps_skip = 50
         nsweep_meas = nsamples * sweeps_skip
-        net_spins, net_energies, _, spins_configs = metro.metropolis(spins, nsweep_meas,sweeps_skip, BJ, return_configs=True)
+        net_spins, net_energies, _, spins_configs = metro.metropolis(spins, nsweep_meas,sweeps_skip,BJ, return_configs=True)
         mean_magnetizations.append(np.mean(net_spins)/N)
         mean_energies.append(np.mean(net_energies)/N)
         heat_capacity.append(ph.heat_capacity(net_energies, BJ, N))
@@ -62,6 +63,6 @@ def main():
     X_pca, explained_variance_ratio = pca.perform_pca(spins_configs, n_components=2)
     pca.pca_plot(X_pca, BJ_s)
     print("PCA analysis completed.")
-    
+
 if __name__ == "__main__":
     main()
