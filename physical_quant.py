@@ -8,7 +8,7 @@ def total_energy(spins):
     arr = - spins * convolve(spins, kern, mode='wrap', cval=0) #periodic boundary conditions
     return arr.sum()/2
 
-def magnetization(spins):
+def abs_magnetization(spins):
     return abs(spins.sum())
 
 def heat_capacity(energies, BJ, N):

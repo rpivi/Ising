@@ -3,10 +3,11 @@ import physical_quant as ph
 import plot as plot
 import metropolis as metro
 import numpy as np
+import pca as pca
 
 def main():
 
-# Part1: Thermalization analysis of different initial states at fixed BJ ########
+# Part1: Thermalization analysis of different initial states at fixed BJ
     L = 50  # Lattice size
     N = L * L  # Total number of spins
     BJ = 0.7  # Inverse temperature
@@ -23,8 +24,10 @@ def main():
     plot.plot_two_steps(tot_energies_r, tot_energies_u, name="Total Energy", name1="Random Init", name2="Up Init", BJ=BJ)
     print("Thermalization analysis completed and plots saved.")
 
-# Part2: Phase transition analysis  #############################################
-    BJ_s = [0.1,0.2,0.3,0.4,0.41,0.44,0.46,0.5,0.6,0.7,0.8,1.0,1.5,2.0, 2.5, 3.0]
+# Part2: Phase transition analysis 
+    T_s = [1.5,2.,2.1,2.2,2.25,2.26,2.27,2.28,2.29,2.3,2.4,2.5,3]
+    BJ_s =[ 1/T for T in T_s]
+    spins_configs= []
 
     mean_magnetizations = []
     mean_energies = []
@@ -38,12 +41,15 @@ def main():
         _,_,spins = metro.metropolis(spins, nsweep_therm, BJ)
 
         #measurement of mean magnetization, mean energy, heat capacity and susceptibility
-        nsweep_meas = 500 # Number of sweeps for measurement = number of samples at each BJ
-        net_spins, net_energies, _ = metro.metropolis(spins, nsweep_meas, BJ)
+        nsamples = 200
+        sweeps_skip = 50
+        nsweep_meas = nsamples * sweeps_skip
+        net_spins, net_energies, _, spins_configs = metro.metropolis(spins, nsweep_meas,sweeps_skip, BJ, return_configs=True)
         mean_magnetizations.append(np.mean(net_spins)/N)
         mean_energies.append(np.mean(net_energies)/N)
         heat_capacity.append(ph.heat_capacity(net_energies, BJ, N))
         susceptibility.append(ph.susceptibility(net_spins, BJ, N))
+        spins_configs.append(spins) # Store the final spin configuration for PCA analysis
         print(f"Completed measurements at BJ={BJ}")
 
     # Plot observables vs BJ
@@ -52,5 +58,10 @@ def main():
     plot.plot_vs_BJ(BJ_s, heat_capacity, name="Heat Capacity")
     plot.plot_vs_BJ(BJ_s, susceptibility, name="Susceptibility")
 
+# Part3: PCA analysis of spin configurations at different BJ values
+    X_pca, explained_variance_ratio = pca.perform_pca(spins_configs, n_components=2)
+    pca.pca_plot(X_pca, BJ_s)
+    print("PCA analysis completed.")
+    
 if __name__ == "__main__":
     main()
