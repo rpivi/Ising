@@ -11,7 +11,7 @@ def main():
     L = 20  # Lattice size
     N = L * L  # Total number of spins
     BJ = 0.7  # Inverse temperature
-    nsweep_therm = 700  # Number of sweeps
+    nsweep_therm = 500  # Number of sweeps
     sweep_skip_therm = 1
     np.random.seed(42)
 
