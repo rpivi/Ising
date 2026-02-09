@@ -27,7 +27,7 @@ def metropolis(spins, nsweep,sweeps_skip ,BJ, return_configs=False):
             energy += dE
 
         if (t+1) % (L*L) == 0:
-            s = (t+1)//(L*L) - 1
+            s = (t+1)//(L*L) - 1 #sweep index starting from 0
             if s%sweeps_skip == 0:  # save configurations and measurements every sweeps_skip sweeps
                 net_spins[s] = ph.abs_magnetization(spins_arr)
                 net_energies[s] = energy

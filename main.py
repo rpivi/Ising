@@ -12,14 +12,14 @@ def main():
     N = L * L  # Total number of spins
     BJ = 0.7  # Inverse temperature
     nsweep_therm = 700  # Number of sweeps
-    sweep_skip_therm = 5
+    sweep_skip_therm = 1
     np.random.seed(42)
 
     spins_r = lat.create_lattice(L, initial_state='random')
     spins_u = lat.create_lattice(L, initial_state='up')
 
-    magn_r, tot_energies_r, spins_r = metro.metropolis(spins_r, nsweep_therm,sweep_skip_therm, BJ)
-    magn_u, tot_energies_u, spins_u= metro.metropolis(spins_u, nsweep_therm,sweep_skip_therm, BJ)
+    magn_r, tot_energies_r, spins_r = metro.metropolis(spins_r, nsweep_therm, sweep_skip_therm, BJ)
+    magn_u, tot_energies_u, spins_u= metro.metropolis(spins_u, nsweep_therm, sweep_skip_therm, BJ)
 
     plot.plot_two_steps(magn_r/N, magn_u/N, name="Mean Magnetization", name1="Random Init", name2="Up Init", BJ=BJ)
     plot.plot_two_steps(tot_energies_r, tot_energies_u, name="Total Energy", name1="Random Init", name2="Up Init", BJ=BJ)
