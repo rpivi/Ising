@@ -59,12 +59,14 @@ def main():
         heat_capacity.append(ph.heat_capacity(net_energies, BJ, N))
         susceptibility.append(ph.susceptibility(net_spins, BJ, N))
 
-        #calculating errors using standard error of the mean
+        #calculating errors using standard error of the mean: std/sqrt(n)
         mean_magnetizations_err.append(stats.sem(abs_magnet/N))
         mean_energies_err.append(stats.sem(net_energies/N))
-        heat_capacity_err.append(stats.sem([ph.heat_capacity([e], BJ, N) for e in net_energies]))
-        susceptibility_err.append(stats.sem([ph.susceptibility([m], BJ, N) for m in net_spins]))
 
+        # For heat capacity and susceptibility with error propagation
+        heat_capacity_err.append(stats.sem(net_energies**2/N**2)*(BJ**2))
+        susceptibility_err.append(stats.sem(net_spins**2/N**2)*(BJ))
+        
         #saving configurations for PCA 
         spins_configs.append(configs)
         print(f"Completed measurements at BJ={BJ}")
