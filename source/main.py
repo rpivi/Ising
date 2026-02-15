@@ -4,15 +4,15 @@ import physical_quant as ph
 import plot as plot
 import metropolis as metro
 import pca as pca
-import statistics as stats
 
 def main():
 
 # Part1: Thermalization analysis of different initial states at fixed BJ
     L = 20  # Lattice size
     N = L * L  # Total number of spins
-    BJ = 0.7  # Inverse temperature
-    nsweep_therm = 500  # Number of sweeps
+    T = 1.4
+    BJ = 1/T    # Inverse temperature
+    nsweep_therm = 500 # Number of sweeps
     sweep_skip_therm = 1
     np.random.seed(42)
 
@@ -23,11 +23,11 @@ def main():
     _, magn_u, tot_energies_u, spins_u= metro.metropolis(spins_u, nsweep_therm, sweep_skip_therm, BJ)
 
     plot.plot_two_steps(magn_r/N, magn_u/N, name="Mean Magnetization", name1="Random Init", name2="Up Init", BJ=BJ)
-    plot.plot_two_steps(tot_energies_r, tot_energies_u, name="Total Energy", name1="Random Init", name2="Up Init", BJ=BJ)
+    plot.plot_two_steps(tot_energies_r/N, tot_energies_u/N, name="Mean Energy", name1="Random Init", name2="Up Init", BJ=BJ)
     print("Thermalization analysis completed and plots saved.")
 
 # Part2: Phase transition analysis 
-    T_s = [1.5,2.,2.2,2.25,2.26,2.27,2.28,2.29,2.3,2.4,2.5,3]
+    T_s = [1.3,1.4,1.5,1.6,1.7,1.8,1.9,2.,2.1,2.2,2.25,2.26,2.27,2.28,2.29,2.3,2.4,2.5,2.6,2.7,2.8,2.93,3.1]
     BJ_s =[ 1/T for T in T_s]
     spins_configs= []
 
@@ -60,19 +60,27 @@ def main():
         susceptibility.append(ph.susceptibility(net_spins, BJ, N))
 
         #calculating errors using standard error of the mean: std/sqrt(n)
-        mean_magnetizations_err.append(stats.sem(abs_magnet/N))
-        mean_energies_err.append(stats.sem(net_energies/N))
+        mean_magnetizations_err.append(np.std(abs_magnet/N)/np.sqrt(nsamples))
+        mean_energies_err.append(np.std(net_energies/N)/np.sqrt(nsamples))
 
         # For heat capacity and susceptibility with error propagation
-        heat_capacity_err.append(stats.sem(net_energies**2/N**2)*(BJ**2))
-        susceptibility_err.append(stats.sem(net_spins**2/N**2)*(BJ))
-        
+        # Error estimation for Cv and χ assumbing no correlation beetween configurations:
+        # For heat capacity: C = β²·Var(E)/N
+        energy_variance = np.var(net_energies, ddof=1)
+        energy_variance_err = np.std((net_energies - np.mean(net_energies))**2) / np.sqrt(nsamples)
+        heat_capacity_err.append((BJ**2 / N) * energy_variance_err)
+
+        # For susceptibility: χ = β·Var(M)/N  
+        spin_variance = np.var(net_spins, ddof=1)
+        spin_variance_err = np.std((net_spins - np.mean(net_spins))**2) / np.sqrt(nsamples)
+        susceptibility_err.append((BJ / N) * spin_variance_err)
+
         #saving configurations for PCA 
         spins_configs.append(configs)
-        print(f"Completed measurements at BJ={BJ}")
+        print(f"Completed measurements for T={T_s[BJ_s.index(BJ)]} (BJ={BJ})")
 
     # Plotting observables vs T
-    plot.plot_vs_T_errors(T_s, mean_magnetizations,mean_energies_err, name="Mean Magnetization")
+    plot.plot_vs_T_errors(T_s, mean_magnetizations,mean_magnetizations_err, name="Mean Magnetization")
     plot.plot_vs_T_errors(T_s, mean_energies, mean_energies_err, name="Mean Energy")
     plot.plot_vs_T_errors(T_s, heat_capacity, heat_capacity_err, name="Heat Capacity")
     plot.plot_vs_T_errors(T_s, susceptibility, susceptibility_err, name="Susceptibility")
@@ -81,6 +89,8 @@ def main():
     all_configs, T_labels = pca.prepare_pca_data(spins_configs, T_s)
     X_pca , explained_var_ratio= pca.perform_pca(all_configs, n_components=2)
     pca.pca_plot(X_pca, T_labels, explained_var_ratio)
+    pca.pca_fpc_T(all_configs, T_labels)
+    print("PCA analysis completed and plots saved.")    
 
 if __name__ == "__main__":
     main()

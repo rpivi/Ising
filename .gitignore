@@ -25,6 +25,7 @@ plots/
 *.nav
 *.snm
 *.vrb
+*.synctex.gz
 
 # =========================
 # Python cache

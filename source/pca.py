@@ -22,7 +22,7 @@ def perform_pca(configs_flat, n_components=2):
     
     return X_pca, pca.explained_variance_ratio_
 
-def pca_plot(X_pca, BJ_labels, explained_variance_ratio=None):
+def pca_plot(X_pca, T_labels, explained_variance_ratio=None):
     T_labels = np.array(T_labels)
     
     plt.figure(figsize=(10, 7))
@@ -30,14 +30,10 @@ def pca_plot(X_pca, BJ_labels, explained_variance_ratio=None):
                          c=T_labels, cmap='viridis', 
                          s=50, alpha=0.7, edgecolors='black', linewidth=0.5)
     
-    cbar = plt.colorbar(scatter, label='β/J')
-    
-    if explained_variance_ratio is not None:
-        xlabel = f"PC1 ({explained_variance_ratio[0]*100:.1f}% var)"
-        ylabel = f"PC2 ({explained_variance_ratio[1]*100:.1f}% var)"
-    else:
-        xlabel = "Principal Component 1"
-        ylabel = "Principal Component 2"
+    cbar = plt.colorbar(scatter, label='Temperature T')
+
+    xlabel = "Principal Component 1"
+    ylabel = "Principal Component 2"
     
     plt.xlabel(xlabel, fontsize=12)
     plt.ylabel(ylabel, fontsize=12)
@@ -47,3 +43,25 @@ def pca_plot(X_pca, BJ_labels, explained_variance_ratio=None):
     #save in figures folder
     plt.savefig("figures/PCA_spin_configurations.png", dpi=300)
     plt.close()
+
+def pca_fpc_T(X, T_labels):
+    # study the first principal component as a function of T
+
+    X = np.asarray(X)
+    T_labels = np.asarray(T_labels)
+
+    T_unique = np.unique(T_labels)
+    mean_fpc = []
+
+    for T in T_unique:
+        mean_fpc.append(X[T_labels == T, 0].mean())
+
+    plt.figure(figsize=(8,6))
+    plt.plot(T_unique, mean_fpc, marker='o')
+    plt.xlabel("Temperature T")
+    plt.ylabel("Mean First Principal Component")
+    plt.title("Mean First Principal Component vs Temperature")
+    plt.grid()
+    plt.savefig("figures/Mean_FPC_vs_T.png", dpi=300)
+    plt.close()
+
