@@ -1,12 +1,39 @@
-# Output plots
+# =========================
+# Output plots (Python)
+# =========================
 plots/
-figures/
 *.png
 
+# ❗ Eccezione: voglio le immagini in figures/
+!figures/
+!figures/**/*.png
+
+# =========================
+# LaTeX build files
+# =========================
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.bbl
+*.blg
+*.nav
+*.snm
+*.vrb
+
+# =========================
 # Python cache
+# =========================
 __pycache__/
 *.pyc
 
+# =========================
 # Editor / OS
+# =========================
 *.swp
 .DS_Store
