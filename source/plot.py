@@ -10,8 +10,8 @@ def plot_step(obs, name="Observable", BJ =0):
     plt.xlabel("Monte Carlo step")
     plt.ylabel(name)
     plt.legend([f"BJ = {BJ}"])
-    #save figure    
-    plt.savefig(f"{name.replace(' ', '_')}_B_{BJ}.png")
+    #save figure  in figures folder
+    plt.savefig(f"figures/{name.replace(' ', '_')}_B_{BJ}.png")
     plt.close()
 
 #plot of 2 observables vs Monte Carlo steps
@@ -25,8 +25,8 @@ def plot_two_steps(obs1, obs2, name="Observable", name1="Observable 1", name2="O
     plt.xlabel("t [Monte Carlo]")
     plt.ylabel(name)
     plt.legend([f"{name1}", f"{name2}"])
-    #save figure    
-    plt.savefig(f"{name}_{BJ}.png")
+    #save figure in figures folder
+    plt.savefig(f"figures/{name}_{BJ}.png")
     plt.close()
 
 #plot of an observable vs temperature
@@ -37,7 +37,7 @@ def plot_vs_BJ(BJ_s, obs_s, name="Observable"):
     plt.title(f"{name} vs BJ")
     plt.xlabel("BJ")
     plt.ylabel(name)
-    #save figure    
-    plt.savefig(f"{name}_vs_BJ.png")
+    #save figure in figures folder
+    plt.savefig(f"figures/{name}_vs_BJ.png")
     plt.close()
     
