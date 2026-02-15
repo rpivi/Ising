@@ -2,15 +2,15 @@ from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt 
 import numpy as np
 
-def prepare_pca_data(spins_configs_nested, BJ_s):
+def prepare_pca_data(spins_configs_nested, T_s):
     all_configs = []
-    BJ_labels = []
+    T_labels = []
     
-    for BJ, configs in zip(BJ_s, spins_configs_nested):
+    for T, configs in zip(T_s, spins_configs_nested):
         all_configs.extend(configs)
-        BJ_labels.extend([BJ] * len(configs))
+        T_labels.extend([T] * len(configs))
     
-    return all_configs, BJ_labels
+    return all_configs, T_labels
 
 
 def perform_pca(configs_flat, n_components=2):
@@ -23,11 +23,11 @@ def perform_pca(configs_flat, n_components=2):
     return X_pca, pca.explained_variance_ratio_
 
 def pca_plot(X_pca, BJ_labels, explained_variance_ratio=None):
-    BJ_labels = np.array(BJ_labels)
+    T_labels = np.array(T_labels)
     
     plt.figure(figsize=(10, 7))
     scatter = plt.scatter(X_pca[:, 0], X_pca[:, 1], 
-                         c=BJ_labels, cmap='viridis', 
+                         c=T_labels, cmap='viridis', 
                          s=50, alpha=0.7, edgecolors='black', linewidth=0.5)
     
     cbar = plt.colorbar(scatter, label='β/J')
@@ -44,5 +44,6 @@ def pca_plot(X_pca, BJ_labels, explained_variance_ratio=None):
     plt.title("PCA of Spin Configurations - Ising Model", fontsize=14)
     plt.grid(alpha=0.3)
     plt.tight_layout()
-    plt.savefig("PCA_spin_configurations.png", dpi=300)
+    #save in figures folder
+    plt.savefig("figures/PCA_spin_configurations.png", dpi=300)
     plt.close()
