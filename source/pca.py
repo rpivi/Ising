@@ -22,7 +22,7 @@ def perform_pca(configs_flat, n_components=2):
     
     return X_pca, pca.explained_variance_ratio_
 
-def pca_plot(X_pca, T_labels, explained_variance_ratio=None):
+def pca_plot(X_pca, T_labels):
     T_labels = np.array(T_labels)
     
     plt.figure(figsize=(10, 7))
@@ -44,24 +44,51 @@ def pca_plot(X_pca, T_labels, explained_variance_ratio=None):
     plt.savefig("figures/PCA_spin_configurations.png", dpi=300)
     plt.close()
 
-def pca_fpc_T(X, T_labels):
+def pca_fpc_T(configs_flat, T_labels):
     # study the first principal component as a function of T
 
-    X = np.asarray(X)
-    T_labels = np.asarray(T_labels)
+    X = np.array([config.flatten() for config in configs_flat])
+    T_labels = np.array(T_labels)
 
-    T_unique = np.unique(T_labels)
-    mean_fpc = []
+    pca = PCA(n_components=1)
+    X_pca = pca.fit_transform(X)
 
-    for T in T_unique:
-        mean_fpc.append(X[T_labels == T, 0].mean())
+    #plotting the first principal component vs T
+    plt.figure(figsize=(10, 6))
+    plt.scatter(T_labels, X_pca[:, 0], s=50, alpha=0.7, edgecolors='black', linewidth=0.5)
+    #line in the Tc
+    plt.axvline(x=2.269, color='red', linestyle='--', label='Critical Temperature Tc')
+    plt.legend()
+    plt.xlabel('Temperature T', fontsize=12)
+    plt.ylabel('First Principal Component', fontsize=12)
+    plt.title('First Principal Component vs Temperature', fontsize=14)
+    plt.grid(alpha=0.3)
+    plt.tight_layout()
+    #save in figures folder
+    plt.savefig("figures/PCA_first_component_vs_T.png", dpi=300)
+    plt.close()
 
-    plt.figure(figsize=(8,6))
-    plt.plot(T_unique, mean_fpc, marker='o')
-    plt.xlabel("Temperature T")
-    plt.ylabel("Mean First Principal Component")
-    plt.title("Mean First Principal Component vs Temperature")
-    plt.grid()
-    plt.savefig("figures/Mean_FPC_vs_T.png", dpi=300)
+def pca_spc_T(configs_flat, T_labels):
+    # study the second principal component as a function of T
+
+    X = np.array([config.flatten() for config in configs_flat])
+    T_labels = np.array(T_labels)
+
+    pca = PCA(n_components=2)
+    X_pca = pca.fit_transform(X)
+    
+    #plotting the second principal component vs T
+    plt.figure(figsize=(10, 6))
+    plt.scatter(T_labels, X_pca[:, 1], s=50, alpha=0.7, edgecolors='black', linewidth=0.5)
+    #line in the Tc
+    plt.axvline(x=2.269, color='red', linestyle='--', label='Critical Temperature Tc')
+    plt.legend()
+    plt.xlabel('Temperature T', fontsize=12)
+    plt.ylabel('Second Principal Component', fontsize=12)
+    plt.title('Second Principal Component vs Temperature', fontsize=14)
+    plt.grid(alpha=0.3)
+    plt.tight_layout()
+    #save in figures folder
+    plt.savefig("figures/PCA_second_component_vs_T.png", dpi=300)
     plt.close()
 

@@ -90,6 +90,7 @@ def main():
     X_pca , explained_var_ratio= pca.perform_pca(all_configs, n_components=2)
     pca.pca_plot(X_pca, T_labels, explained_var_ratio)
     pca.pca_fpc_T(all_configs, T_labels)
+    pca.pca_spc_T(all_configs, T_labels)
     print("PCA analysis completed and plots saved.")    
 
 if __name__ == "__main__":

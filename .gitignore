@@ -4,28 +4,22 @@
 plots/
 *.png
 
-# ❗ Eccezione: voglio le immagini in figures/
-!figures/
-!figures/**/*.png
+# ❗ Eccezione: voglio le immagini in source/figures 
+!source/figures/
+!source/figures/**/*.png
 
 # =========================
-# LaTeX build files
+# LaTeX build files  in folder report (.aux, .log, .out, .toc, .lof, .lot, .fls, .fdb_latexmk)
 # =========================
-*.aux
-*.log
-*.out
-*.toc
-*.lof
-*.lot
-*.fls
-*.fdb_latexmk
-*.synctex.gz
-*.bbl
-*.blg
-*.nav
-*.snm
-*.vrb
-*.synctex.gz
+report/*.aux
+report/*.log
+report/*.out
+report/*.toc
+report/*.lof
+report/*.lot
+report/*.fls
+report/*.fdb_latexmk
+report/*.synctex.gz
 
 # =========================
 # Python cache

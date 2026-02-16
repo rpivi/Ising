@@ -23,6 +23,10 @@ def plot_vs_T_errors(T_s, obs_s, obs_err_s, name="Observable"):
     plt.title(f"{name} vs T")
     plt.xlabel("T")
     plt.ylabel(name)
+    if name == "Mean Magnetization":
+        plt.ylim(0, 1)
+    #line in the Tc
+    plt.axvline(x=2.269, color='red', linestyle='--', label='Critical Temperature Tc')
     #save figure in figures folder
     plt.savefig(f"figures/{name}_vs_T_errors.png")
     plt.close()
