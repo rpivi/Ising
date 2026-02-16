@@ -22,7 +22,7 @@ def perform_pca(configs_flat, n_components=2):
     
     return X_pca, pca.explained_variance_ratio_
 
-def pca_plot(X_pca, T_labels):
+def pca_plot(X_pca, T_labels, explained_var_ratio):
     T_labels = np.array(T_labels)
     
     plt.figure(figsize=(10, 7))
@@ -31,9 +31,9 @@ def pca_plot(X_pca, T_labels):
                          s=50, alpha=0.7, edgecolors='black', linewidth=0.5)
     
     cbar = plt.colorbar(scatter, label='Temperature T')
-
-    xlabel = "Principal Component 1"
-    ylabel = "Principal Component 2"
+    
+    xlabel = f"Principal Component 1 ({explained_var_ratio[0]*100:.1f}% var)"
+    ylabel = f"Principal Component 2 ({explained_var_ratio[1]*100:.1f}% var)"
     
     plt.xlabel(xlabel, fontsize=12)
     plt.ylabel(ylabel, fontsize=12)
@@ -76,7 +76,7 @@ def pca_spc_T(configs_flat, T_labels):
 
     pca = PCA(n_components=2)
     X_pca = pca.fit_transform(X)
-    
+
     #plotting the second principal component vs T
     plt.figure(figsize=(10, 6))
     plt.scatter(T_labels, X_pca[:, 1], s=50, alpha=0.7, edgecolors='black', linewidth=0.5)

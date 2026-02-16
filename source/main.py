@@ -27,7 +27,7 @@ def main():
     print("Thermalization analysis completed and plots saved.")
 
 # Part2: Phase transition analysis 
-    T_s = [1.3,1.4,1.5,1.6,1.7,1.8,1.9,2.,2.1,2.2,2.25,2.26,2.27,2.28,2.29,2.3,2.4,2.5,2.6,2.7,2.8,2.93,3.1]
+    T_s = [1.3,1.4,1.5,1.6,1.7,1.8,1.9,2.,2.1,2.2,2.25,2.26,2.27,2.28,2.29,2.3,2.4,2.5,2.6,2.7,2.8,2.9,3,3.1]
     BJ_s =[ 1/T for T in T_s]
     spins_configs= []
 
