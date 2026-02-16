@@ -13,6 +13,54 @@ Calcolata la funzione di partizione possiamo ottenere tutte le proprietà del si
 F = -k_B T \ ln Z
 \end{equation}
 
-La teoria di campo medio ci permette di calcolare un'approssimazione della funzione di partizione, assumendo che ogni spin sia influenzato da un campo magnetico medio generato dagli altri spin.
+La teoria di campo medio ci permette di calcolare un'approssimazione della funzione di partizione, 
+assumendo che ogni spin sia influenzato da un campo magnetico medio generato dagli altri spin \cite{stanford_sml_susskind}.
+In $d$ dimensioni ogni spin ha $z = 2 \ d $ vicini, l'energia di un singolo spin è data da:
+\begin{equation}
+E_i = -J s_i \sum_{j=1}^z s_j
+\end{equation}
+Considerando che ogni spin può essere $+1$ o $-1$, possiamo sostituire la somma con una media, ottenendo:
+\begin{equation}
+E_i = -J s_i z m
+\end{equation}
+Dove $m$ è la magnetizzazione media del sistema, definita come:
+\begin{equation}
+m = \langle s_i \rangle 
+\end{equation}
+La funzione di partizione diventa per un unico spin:
+\begin{equation}
+    Z = \sum_{s_i} e^{\beta J z m s_i} = e^{\beta J z m} + e^{-\beta J z m} = 2 \cosh(\beta J z m)
+\end{equation}
+L'energia media:
+\begin{equation}
+    \langle E \rangle= - \frac{1}{Z} \ \frac{\partial Z}{\partial \beta} = - J z m \tanh(\beta J z m)
+\end{equation}
+Confrontandola questa espressione con l'espressione precedente dell'energia otteniamo l'equazione:
+\begin{equation}
+    m = \langle s_i \rangle = \tanh(\beta J z m)
+\end{equation}
+Questa è una equazione trascendentale, che possiamo risolvere numericamente\cite{essential_statistical_physics}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{kennett_trascendente.jpg}
+    \caption{Soluzione numerica dell'equazione.}
+    \label{fig:kennett_trascendente}
+\end{figure}
+
+L'equazione ha un unica soluzione per $z \beta J < 1$, mentre per $z \beta J > 1$ ne ha due; 
+ovvero il sistema per temperature alte il sistema è in uno stato disordinato con magnetizzazione nulla, mentre per temperature basse il sistema è in uno stato ordinato con magnetizzazione diversa da zero.
+In questo modo è possibile ottenere la temperatura critica stimata dalla teoria di campo medio imponendo che $z \beta J = 1$, da cui otteniamo:
+\begin{equation}
+    T_c = \frac{z J}{k_b}
+\end{equation}
 
 \subsection{Risultati della soluzione esatta}
+La soluzione esatta del modello di Insing nel caso bidimensionale con $h=0$ è stata ottenuta per la prima volta da Lars Onsager nel 1944.
+Onsager riusci a determinare la temperatura critica $T_c$ alla quale avviene la transizione di fase, e a calcolare esattamente la funzione di partizione e le proprietà termodinamiche del sistema.
+La temperatura critica è data da:
+\begin{equation}
+    T_c = \frac{2J}{k_B \ln(1 + \sqrt{2})} \approx 2.269 J/k_B
+\end{equation}
+La quale è inferiore alla temperatura critica prevista dalla teoria di campo medio, la quale per il caso bidimensionale è $T_c^{MF} = 4J/k_B$. 
+Il motivo della sovrastima è 

@@ -1,2 +1,56 @@
 \section{PCA: Principal Component Analysis}
-\subsection{Definizione}
+
+\subsection{Introduzione alla PCA}
+
+La PCA è una tecnica - di machine learning non supervisionato - lineare di riduzione 
+della dimensionalità, che consente diidentificare le direzioni lungo le quali i dati presentano la massima varianza.
+Attraverso una trasformazione ortogonale, essa proietta i dati originali in un
+nuovo sistema di coordinate in cui le nuove variabili, dette componenti principali.
+
+La prima componente principale è la direzione lungo la quale la varianza dei dati
+è massima; la seconda è ortogonale alla prima e massimizza la varianza residua,
+e così via.
+
+\subsection{Algoritmo}
+
+Sia $X$ la matrice dei dati centrati rispetto alla media, di dimensione $N \times p$, dove $N$
+è il numero di data points e $p$ il numero di features di ogni dato(Per lo studio del modello di Ising $p = n^o \ di \ siti$,
+mentre $N = n^o \ di \ configurazioni \ campionate)$.
+
+La matrice di covarianza è definita come:
+
+\begin{equation}
+    C = \frac{1}{N-1} X^T X
+\end{equation}
+
+Utilizzando la SVD (singular value decomposition) per la matrice dei dati centrali abbiamo:
+\begin{equation}
+    X = U S V^{T}
+    C = \frac{1}{N-1} V S U^{T} U S V^{T} = V (\frac{S^2}{N-1}) V^T
+\end{equation}
+Gli autovettori associati ai maggiori autovalori individuano le direzioni lungo
+le quali i dati mostrano le fluttuazioni più significative.
+
+La capacità della PCA di ridurre la dimensionalità dei dati risiede nella possibilità di proiettare 
+i dati attraverso la trasformazione ortogonale $V$ considerandone però solo le prime $g$ colonne.
+\begin{equation}
+    \tilde{X} = X \tilde{V}
+\end{equation}
+Dove abbiamo indicato con $\tilde{X}$ la matrice dei dati proietata e con $\tilde{V}$ la matrice V con solo le prime $g$ colonne, 
+$\tilde{X}$ è dunque una matrice $N \times g$. 
+
+\subsection{Interpretazione fisica nel modello di Ising}
+
+Nel caso del modello di Ising, ogni configurazione Monte Carlo può essere
+interpretata come un punto nello spazio delle configurazioni. Applicando la PCA
+a un insieme di configurazioni generate a diverse temperature, la prima
+componente principale risulta essere fortemente correlata con la magnetizzazione
+del sistema.
+
+In prossimità della transizione di fase, la distribuzione dei dati nello spazio
+delle prime componenti principali mostra una chiara separazione tra fase
+ferromagnetica e fase paramagnetica. \cite{Hu2017}
+
+
+
+
