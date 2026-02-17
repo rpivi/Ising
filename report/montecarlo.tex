@@ -1,10 +1,96 @@
 \section{Metodo Monte Carlo}
 
+Lo studio del modello di Ising mediante simulazioni numeriche si basa su tecniche di campionamento stocastico. 
+L’obiettivo è generare configurazioni di spin distribuite secondo la distribuzione di Boltzmann:
+
+\begin{equation}
+P(\{s_i\}) = \frac{1}{Z} e^{-\beta H(\{s_i\})}
+\end{equation}
+
+Poiché il numero totale di configurazioni cresce come $2^N$, un campionamento esaustivo è impraticabile per sistemi macroscopici. 
+Si utilizza quindi il metodo Monte Carlo con algoritmo di Metropolis per costruire una catena di Markov che converga alla distribuzione canonica.
+
 \subsection{Algoritmo di Metropolis}
+
+L’algoritmo di Metropolis permette di generare una sequenza di configurazioni distribuite secondo la misura di Boltzmann. 
+Per il modello di Ising bidimensionale con Hamiltoniana
+
+\begin{equation}
+H = -J \sum_{\langle i,j \rangle} s_i s_j
+\end{equation}
+
+l’algoritmo procede come segue:
+
+\begin{enumerate}
+    \item Si sceglie casualmente un sito $i$ del reticolo.
+    \item Si propone il flip dello spin $s_i \rightarrow -s_i$.
+    \item Si calcola la variazione di energia $\Delta E$ associata al flip.
+    \item Il flip viene accettato con probabilità
+    \begin{equation}
+    P_{\text{acc}} = \min\left(1, e^{-\beta \Delta E}\right).
+    \end{equation}
+\end{enumerate}
+
+Questo criterio garantisce il rispetto della condizione di bilancio dettagliato:
+
+\begin{equation}
+\frac{P(C \rightarrow C')}{P(C' \rightarrow C)} = e^{-\beta (E_{C'} - E_C)},
+\end{equation}
+
+assicurando che la distribuzione stazionaria della catena di Markov sia quella canonica.
+
+Un’unità temporale Monte Carlo (MC sweep) corrisponde a $N=L^2$ tentativi di aggiornamento, così che in media ogni spin venga considerato una volta.
 
 \subsection{Dettagli sull'implementazione}
 
+Le simulazioni sono state eseguite su un reticolo quadrato $L \times L$ con condizioni al contorno periodiche, in modo da minimizzare effetti di bordo.
+
+Per ogni temperatura:
+
+\begin{itemize}
+    \item È stata effettuata una fase iniziale di termalizzazione, durante la quale le configurazioni non sono state utilizzate per il calcolo delle medie.
+    \item Successivamente sono state raccolte configurazioni separate da un numero di 50 sweep per ridurre le correlazioni temporali.
+\end{itemize}
+
+Le grandezze fisiche calcolate sono:
+
+\paragraph{Energia media}
+\begin{equation}
+\langle E \rangle = \frac{1}{M} \sum_{k=1}^{M} E_k
+\end{equation}
+
+\paragraph{Magnetizzazione media}
+\begin{equation}
+\langle |M| \rangle = \frac{1}{M} \sum_{k=1}^{M} |M_k|
+\end{equation}
+
+\paragraph{Calore specifico}
+\begin{equation}
+C_V = \frac{\beta^2}{N} \left( \langle E^2 \rangle - \langle E \rangle^2 \right)
+\end{equation}
+
+\paragraph{Suscettibilità}
+\begin{equation}
+\chi = \frac{\beta}{N} \left( \langle M^2 \rangle - \langle M \rangle^2 \right)
+\end{equation}
+
+Gli errori statistici sono stati stimati ...
+
 \section{Risultati della simulazione}
+
+La Figura \ref{fig:simultation_one} mostra l’evoluzione temporale di energia e magnetizzazione per due diverse condizioni iniziali: configurazione ordinata (tutti spin up) e configurazione casuale.
+
+Si osserva che, dopo un certo numero di sweep Monte Carlo, entrambe le evoluzioni convergono agli stessi valori medi, indicando la perdita di memoria della condizione iniziale e il raggiungimento dell’equilibrio termico. Questo comportamento è una verifica numerica dell’ergodicità della dinamica.
+
+La Figura \ref{fig:simulation_two} riporta energia media e magnetizzazione media in funzione della temperatura. 
+
+L’energia varia in modo regolare e continuo, mentre la magnetizzazione mostra un comportamento tipico di una transizione di fase: per basse temperature il sistema presenta ordine ferromagnetico con $\langle |M| \rangle \neq 0$, mentre al di sopra di una temperatura critica $T_c$ la magnetizzazione si annulla nel limite termodinamico.
+
+La Figura \ref{fig:simultation_three} mostra il calore specifico e la suscettibilità. Entrambe le quantità presentano un picco in corrispondenza della temperatura critica. 
+
+Il picco del calore specifico è associato alle fluttuazioni energetiche, mentre quello della suscettibilità è legato alle fluttuazioni della magnetizzazione. L’aumento delle fluttuazioni in prossimità di $T_c$ è una firma della criticità del sistema.
+
+Nel limite di sistema infinito, tali grandezze presentano un comportamento non analitico; nel sistema finito simulato si osserva invece un massimo arrotondato, la cui altezza cresce all’aumentare di $L$.
 
 \begin{figure}[H]
     \centering
@@ -62,11 +148,4 @@
     \end{subfigure}
     \caption{Capacità termica e suscettibilità in funzione della temperatura.}
     \label{fig:simultation_three}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.6\textwidth]{spatial_correlation.png}
-    \caption{Correlazione spaziale degli spin a 3 diverse diverse temperature.}
-    \label{fig:correlation}
 \end{figure}

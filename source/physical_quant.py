@@ -22,23 +22,3 @@ def susceptibility(magnetizations, BJ, N):
     M_mean = np.mean(magnetizations)
     chi = (BJ / N) * (M2_mean - M_mean**2)
     return chi
-
-def spatial_correlation(spins, r):
-    mean_spin = np.mean(spins)
-    horiz = np.mean(spins * np.roll(spins, r, axis=1))
-    vert  = np.mean(spins * np.roll(spins, r, axis=0))
-    return (horiz + vert) / 2 - mean_spin**2
-
-def mean_spatial_correlation(configs, L, max_r=None):
-    if max_r is None:
-        max_r = L // 2
-    
-    C_r_mean = np.zeros(max_r)
-    
-    for config in configs:
-        spins = config.reshape(L, L)
-        for r in range(max_r):
-            C_r_mean[r] += spatial_correlation(spins, r)
-    
-    C_r_mean /= len(configs)
-    return np.arange(max_r), C_r_mean

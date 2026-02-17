@@ -2,20 +2,25 @@
 
 \subsection{Introduzione alla PCA}
 
-La PCA è una tecnica lineare di machine learning non supervisionato utilizzata al fine di ridurre la
-dimensionalità dei dati.Essa consente di identificare le direzioni lungo le quali i dati presentano la massima varianza.
-Attraverso una trasformazione ortogonale, essa proietta i dati originali in un
-nuovo sistema di coordinate in cui le nuove variabili, dette componenti principali.
+La Principal Component Analysis (PCA) è una tecnica lineare di apprendimento non supervisionato utilizzata per la riduzione della dimensionalità dei dati. 
+L’obiettivo della PCA è identificare le direzioni nello spazio delle feature lungo le quali i dati presentano la massima varianza.
 
-La prima componente principale è la direzione lungo la quale la varianza dei dati
-è massima; la seconda è ortogonale alla prima e massimizza la varianza residua,
-e così via.
+Attraverso una trasformazione ortogonale, i dati originali vengono proiettati in un nuovo sistema di coordinate in cui le nuove variabili, dette componenti principali, sono linearmente indipendenti e ordinate per varianza decrescente.
+
+La prima componente principale individua la direzione lungo la quale la varianza dei dati è massima.  
+La seconda componente è ortogonale alla prima e massimizza la varianza residua, e così via.
+
+In questo modo è possibile rappresentare i dati in uno spazio di dimensione ridotta mantenendo l’informazione più rilevante dal punto di vista statistico.
 
 \subsection{Algoritmo}
 
-Sia $X$ la matrice dei dati centrati rispetto alla media, di dimensione $N \times p$, dove $N$
-è il numero di data points e $p$ il numero di features di ogni dato(Per lo studio del modello di Ising $p = n^o \ di \ siti$,
-mentre $N = n^o \ di \ configurazioni \ campionate)$.
+Sia $X$ la matrice dei dati centrati rispetto alla media, di dimensione $N \times p$, dove:
+\begin{itemize}
+    \item $N$ è il numero di configurazioni campionate,
+    \item $p$ è il numero di feature di ciascun dato.
+\end{itemize}
+
+Nel caso del modello di Ising, $p = L^2$ rappresenta il numero di siti del reticolo, mentre $N$ è il numero di configurazioni Monte Carlo generate.
 
 La matrice di covarianza è definita come:
 
@@ -23,34 +28,53 @@ La matrice di covarianza è definita come:
     C = \frac{1}{N-1} X^T X
 \end{equation}
 
-Utilizzando la SVD (singular value decomposition) per la matrice dei dati centrali abbiamo:
-\begin{equation}
-    X = U S V^{T}
-    C = \frac{1}{N-1} V S U^{T} U S V^{T} = V (\frac{S^2}{N-1}) V^T
-\end{equation}
-Gli autovettori associati ai maggiori autovalori individuano le direzioni lungo
-le quali i dati mostrano le fluttuazioni più significative.
+La PCA consiste nel diagonalizzare la matrice di covarianza:
 
-La capacità della PCA di ridurre la dimensionalità dei dati risiede nella possibilità di proiettare 
-i dati attraverso la trasformazione ortogonale $V$ considerandone però solo le prime $g$ colonne.
+\begin{equation}
+    C v_i = \lambda_i v_i
+\end{equation}
+
+dove $v_i$ sono gli autovettori (componenti principali) e $\lambda_i$ gli autovalori associati.
+
+In pratica, si utilizza la decomposizione ai valori singolari (SVD) della matrice dei dati centrati:
+
+\begin{equation}
+    X = U S V^T
+\end{equation}
+
+Sostituendo nella definizione di $C$ si ottiene:
+
+\begin{equation}
+    C = \frac{1}{N-1} V S^2 V^T
+\end{equation}
+
+Gli autovettori della matrice di covarianza coincidono quindi con le colonne di $V$, mentre gli autovalori sono dati da:
+
+\begin{equation}
+    \lambda_i = \frac{S_i^2}{N-1}
+\end{equation}
+
+La riduzione della dimensionalità si ottiene proiettando i dati sulle prime $g$ componenti principali:
+
 \begin{equation}
     \tilde{X} = X \tilde{V}
 \end{equation}
-Dove abbiamo indicato con $\tilde{X}$ la matrice dei dati proietata e con $\tilde{V}$ la matrice V con solo le prime $g$ colonne, 
-$\tilde{X}$ è dunque una matrice $N \times g$. 
+
+dove $\tilde{V}$ contiene le prime $g$ colonne di $V$.  
+La matrice $\tilde{X}$ ha dimensione $N \times g$.
 
 \subsection{Interpretazione fisica nel modello di Ising}
 
-Nel caso del modello di Ising, ogni configurazione Monte Carlo può essere
-interpretata come un punto nello spazio delle configurazioni. Applicando la PCA
-a un insieme di configurazioni generate a diverse temperature, la prima
-componente principale risulta essere fortemente correlata con la magnetizzazione
-del sistema.
+Nel modello di Ising, ogni configurazione Monte Carlo può essere rappresentata come un punto nello spazio $\mathbb{R}^{L^2}$, in cui ogni coordinata corrisponde allo spin di un sito del reticolo.
 
-In prossimità della transizione di fase, la distribuzione dei dati nello spazio
-delle prime componenti principali mostra una chiara separazione tra fase
-ferromagnetica e fase paramagnetica. \cite{Hu2017}
+Applicando la PCA a configurazioni generate a diverse temperature, emerge un risultato fisicamente significativo: la prima componente principale risulta fortemente correlata con la magnetizzazione totale del sistema.
 
+Infatti, nella fase ferromagnetica ($T < T_c$) le configurazioni si raggruppano in due regioni distinte \ref{fig:pca}, corrispondenti agli stati con magnetizzazione positiva e negativa.  
+Nella fase paramagnetica ($T > T_c$), invece, le configurazioni si distribuiscono attorno a valori prossimi a zero.
+
+...
+
+Questo comportamento evidenzia come una tecnica puramente statistica sia in grado di catturare una quantità fisica fondamentale e di individuare la transizione di fase senza alcuna informazione supervisata \cite{Hu2017}.
 
 \begin{figure}[H]
     \centering

@@ -12,7 +12,7 @@ def main():
     N = L * L  # Total number of spins
     T = 1.4
     BJ = 1/T    # Inverse temperature
-    nsweep_therm = 700 # Number of sweeps
+    nsweep_therm = 500 # Number of sweeps
     sweep_skip_therm = 1
     np.random.seed(42)
 
@@ -85,9 +85,6 @@ def main():
     plot.plot_vs_T_errors(T_s, mean_energies, mean_energies_err, name="Mean Energy")
     plot.plot_vs_T_errors(T_s, heat_capacity, heat_capacity_err, name="Heat Capacity")
     plot.plot_vs_T_errors(T_s, susceptibility, susceptibility_err, name="Susceptibility")
-
-    # Plotting spatial correlation function for selected T values: ordered, critical and disordered
-    plot.spatial_correlation_plot(spins_configs, T_s, L)
 
 # Part3: PCA analysis of spin configurations at different BJ values
     all_configs, T_labels = pca.prepare_pca_data(spins_configs, T_s)
