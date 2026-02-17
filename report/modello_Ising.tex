@@ -3,16 +3,54 @@
 \subsection{Storia}
 Il modello di Ising è un modello matematico utilizzato in fisica statistica per descrivere il comportamento di sistemi magnetici. 
 Fu introdotto ideato da Wilhelm Lenz nel 1920, che lo propose al suo studente di dottorato Ernst Ising come problema da risolvere. 
-Ising nel 1925 pubblica la soluzione del modello in una dimensione \cite{ising1925}, solo nel 1944 Onsager pubblicherà la soluzione per il caso bidimensionale. 
-Il modello rappresenta un sistema di spin su una griglia, dove ogni spin può assumere due stati: +1 (spin up) o -1 (spin down). Gli spin sono fra loro interagenti e possono essere influenzati da un campo magnetico esterno.
-L'allinemento degli spin in una direzione specifica può portare a un comportamento collettivo che si manifesta come magnetizzazione. Il modello di Ising è stato ampiamente studiato per comprendere le transizioni di fase e il comportamento critico nei sistemi magnetici, ed è diventato un punto di riferimento fondamentale nella fisica statistica. 
-Inoltre il modello ha avuto successo anche in altri campi del sapere come le reti neurali, biofisica e sociologia, dimostrando la sua versatilità e importanza come strumento di modellizzazione in diverse discipline scientifiche.
+Ising nel 1925 pubblica la soluzione del modello in una dimensione \cite{ising1925}, solo nel 1944 Onsager 
+pubblicherà la soluzione per il caso bidimensionale. 
+Il modello rappresenta un sistema di spin su una griglia, dove ogni spin può assumere due stati:
+ +1 (spin up) o -1 (spin down). Gli spin sono fra loro interagenti e possono essere influenzati da un campo magnetico esterno.
+L'allinemento degli spin in una direzione specifica può portare a un comportamento collettivo 
+che si manifesta come magnetizzazione. Il modello di Ising è stato ampiamente studiato per comprendere 
+le transizioni di fase e il comportamento critico nei sistemi magnetici, ed è diventato un punto
+di riferimento fondamentale nella fisica statistica. 
+Inoltre il modello ha avuto successo anche in altri campi del sapere come le reti neurali (reti di Hopfield), biofisica e sociologia(modelli di opinione),
+dimostrando la sua versatilità e importanza come strumento di modellizzazione in diverse discipline scientifiche.
 
 \subsection{Definizione del Modello}
+Per gli scopi di questo lavoro, ci concentreremo sul modello di Ising bidimensionale su un reticolo quadrato,
+anche se il modello può essere definito in qualsiasi dimensione e su diversi tipi di reticoli.
 Consideriamo un reticolo con $N$ siti, dove ogni sito $i$ è occupato da uno spin $s_i$ che può assumere i valori +1 o -1.
 L'energia totale del sistema è data dalla seguente espressione:
 \begin{equation}
 E = -J \sum_{\langle i,j \rangle} s_i s_j - h \sum_{i} s_i  
 \end{equation}
-dove $J$ è la costante di accoppiamento che determina l'interazione tra gli spin, $h$ è il campo magnetico esterno, e $\langle i,j \rangle$ indica che la somma è effettuata sui siti adiacenti del reticolo ovvero sui vicini più prossimi.
-Il primo termine rappresenta l'energia di interazione tra gli spin, mentre il secondo termine rappresenta l'energia dovuta al campo magnetico esterno.
+
+Il primo termine rappresenta l’interazione tra coppie di spin adiacenti: dove  $\langle i,j \rangle$ indica che la somma è effettuata sui siti adiacenti del reticolo ovvero sui vicini più prossimi. 
+Il parametro $J$ è la costante di accoppiamento:
+
+\begin{itemize}
+\item Se $J > 0$, l’interazione è ferromagnetica e favorisce l’allineamento degli spin.
+\item Se $J < 0$, l’interazione è antiferromagnetica.
+\end{itemize}
+
+Infatti per $J>0$ l'energia è minima quando gli spin sono allineati (tutti +1 o tutti -1), mentre per $J<0$ l'energia è minima quando gli spin sono anti-allineati (ad esempio, in un reticolo quadrato, ogni spin è circondato da spin di segno opposto).
+
+Nel presente lavoro si considera il caso ferromagnetico ($J>0$) e campo esterno nullo ($h=0$), così che l’Hamiltoniana si riduce a:
+
+\[
+E = -J \sum_{\langle i,j \rangle} s_i s_j.
+\]
+
+L’equilibrio termodinamico del sistema è descritto dalla distribuzione di Boltzmann:
+
+\[
+P(\{s_i\}) = \frac{1}{Z} e^{-\beta H},
+\]
+
+dove $\beta = 1/(k_B T)$ e $Z$ è la funzione di partizione:
+
+\begin{equation}
+Z = \sum_{\{s_i\}} e^{-\beta E(\{s_i\})}    
+\end{equation}
+
+Dal punto di vista fisico, a basse temperature l’energia domina e il sistema tende ad assumere configurazioni ordinate con spin allineati. Ad alte temperature, invece, le fluttuazioni termiche prevalgono e il sistema si trova in uno stato disordinato.
+
+In due dimensioni e campo nullo, il modello presenta una transizione di fase a una temperatura critica finita $T_c$, che separa una fase ferromagnetica (magnetizzazione spontanea non nulla) da una fase paramagnetica (magnetizzazione nulla).

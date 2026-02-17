@@ -2,8 +2,8 @@
 
 \subsection{Introduzione alla PCA}
 
-La PCA è una tecnica - di machine learning non supervisionato - lineare di riduzione 
-della dimensionalità, che consente diidentificare le direzioni lungo le quali i dati presentano la massima varianza.
+La PCA è una tecnica lineare di machine learning non supervisionato utilizzata al fine di ridurre la
+dimensionalità dei dati.Essa consente di identificare le direzioni lungo le quali i dati presentano la massima varianza.
 Attraverso una trasformazione ortogonale, essa proietta i dati originali in un
 nuovo sistema di coordinate in cui le nuove variabili, dette componenti principali.
 
@@ -52,5 +52,29 @@ delle prime componenti principali mostra una chiara separazione tra fase
 ferromagnetica e fase paramagnetica. \cite{Hu2017}
 
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{PCA_spin_configurations.png}
+    \caption{Proiezione dei dati nelle prime due componenti principali.}
+    \label{fig:pca}
+\end{figure}
 
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{PCA_first_component_vs_T.png}
+        \caption{Prima Componente Pricipale}
+        \label{fig:fcp}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{PCA_second_component_vs_T.png}
+        \caption{Seconda Componente Principale}
+        \label{fig:scp}
+    \end{subfigure}
+    \caption{Studio delle componenti principali in funzione della temperatura.}
+    \label{fig:ising_two}
+\end{figure}
 

@@ -6,12 +6,7 @@ La funzione di partizione del modello di Ising nel caso in cui il campo magnetic
 Z = \sum_{\{s_i\}} e^{-\beta E(\{s_i\})} = \sum_{\{s_i\}} e^{\beta J \sum_{\langle i,j \rangle} s_i s_j}
 \end{equation}
 
-Dove $\beta = \frac{1}{k_B T}$ è l'inverso della temperatura. 
-Calcolata la funzione di partizione possiamo ottenere tutte le proprietà del sistema attraverso l'energia libera $F$:
-
-\begin{equation}
-F = -k_B T \ ln Z
-\end{equation}
+Calcolata la funzione di partizione possiamo ottenere tutte le grandezze termodinamiche del sistema.
 
 La teoria di campo medio ci permette di calcolare un'approssimazione della funzione di partizione, 
 assumendo che ogni spin sia influenzato da un campo magnetico medio generato dagli altri spin \cite{stanford_sml_susskind}.
@@ -27,11 +22,14 @@ Dove $m$ è la magnetizzazione media del sistema, definita come:
 \begin{equation}
 m = \langle s_i \rangle 
 \end{equation}
+Essendo la media dei valori degli spin, e può essere interpretato come una misura dell'ordine del sistema.
+$m$ svolge il ruolo di parametro d'ordine: se $m=0$ il sistema è in uno stato disordinato, mentre se $m=1$ il sistema è in uno stato ordinato con tutti gli spin allineati.
+
 La funzione di partizione diventa per un unico spin:
 \begin{equation}
     Z = \sum_{s_i} e^{\beta J z m s_i} = e^{\beta J z m} + e^{-\beta J z m} = 2 \cosh(\beta J z m)
 \end{equation}
-L'energia media:
+L'energia media di un singolo spin è data da:
 \begin{equation}
     \langle E \rangle= - \frac{1}{Z} \ \frac{\partial Z}{\partial \beta} = - J z m \tanh(\beta J z m)
 \end{equation}
@@ -47,20 +45,67 @@ Questa è una equazione trascendentale, che possiamo risolvere numericamente\cit
     \caption{Soluzione numerica dell'equazione.}
     \label{fig:kennett_trascendente}
 \end{figure}
-
 L'equazione ha un unica soluzione per $z \beta J < 1$, mentre per $z \beta J > 1$ ne ha due; 
 ovvero il sistema per temperature alte il sistema è in uno stato disordinato con magnetizzazione nulla, mentre per temperature basse il sistema è in uno stato ordinato con magnetizzazione diversa da zero.
 In questo modo è possibile ottenere la temperatura critica stimata dalla teoria di campo medio imponendo che $z \beta J = 1$, da cui otteniamo:
+
 \begin{equation}
-    T_c = \frac{z J}{k_b}
+    T_c^{MF} = \frac{z J}{k_b}
+\end{equation}
+Degno di nota è il fatto che la temperatura critica stimata dalla teoria di campo medio dipende dal numero di vicini $z$, 
+e quindi dalla dimensione del sistema: ovvero maggiore è il numero di vicini,
+maggiore sarà l'energia termica necessaria per superare l'energia di interazione e portare ad una fase disordinata il sistema.
+
+Dalla funzione di partizione possiamo ricavare anche altre grandezze termodinamiche, come la suscettività magnetica $\chi$.
+In presenza di un campo magnetico esterno $h$, la funzione di partizione diventa:
+\begin{equation}
+    Z = \sum_{s_i} e^{\beta J z m s_i + \beta h s_i} = 2 \cosh(\beta J z m + \beta h)
 \end{equation}
 
-\subsection{Risultati della soluzione esatta}
-La soluzione esatta del modello di Insing nel caso bidimensionale con $h=0$ è stata ottenuta per la prima volta da Lars Onsager nel 1944.
+La suscettività magnetica è definita come la derivata della magnetizzazione rispetto al campo magnetico esterno, valutata in $h=0$:
+\begin{equation}
+    \chi = N \left. \frac{\partial m}{\partial h} \right|_{h=0} = N \left. \frac{\partial}{\partial h} \tanh(\beta J z m + \beta h) \right|_{h=0}
+\end{equation}
+
+Calcolando la derivata otteniamo:
+
+\begin{equation}
+    \chi = N (\beta + \beta J z \frac{\partial m}{\partial h}) \\sech(\beta J z m)^2
+\end{equation}
+Da cui otteniamo:
+\begin{equation}
+    \chi = \frac{N \beta \ sech(\beta J z m)^2}{1 - \beta J z \ sech(\beta J z m)^2}
+\end{equation}
+Dove possiamo notare che $J z \beta = T_c / T$, da cui è poi possibile espandere la separatamente per $T > T_c$ e $T < T_c$ ottenendo [Appendice \ref{appendice:calcolo_suscettivita}]:
+
+\begin{equation}
+    \chi = \begin{cases}
+    \frac{N \beta}{(1 - T_c / T)} & \text{per } T > T_c \\
+    \frac{N \beta}{2 (T_c / T - 1)} & \text{per } T < T_c \\
+    \frac{N \beta}{2 (T_c / T - 1)} & \text{per } T \approx T_c
+    \end{cases}
+\end{equation}
+
+La suscettività magnetica diverge alla temperatura critica, come ci si aspetta da una transizione di fase di secondo ordine.
+Lo stesso tipo di comportamento critico si osserva anche per la capacità termica, che diverge anch'essa alla temperatura critica.
+
+\subsection{Risultati della soluzione esatta e confronto con la teoria di campo medio} 
+La soluzione esatta del modello di Ising nel caso bidimensionale con $h=0$ è stata ottenuta per la prima volta da Lars Onsager nel 1944.
 Onsager riusci a determinare la temperatura critica $T_c$ alla quale avviene la transizione di fase, e a calcolare esattamente la funzione di partizione e le proprietà termodinamiche del sistema.
 La temperatura critica è data da:
 \begin{equation}
     T_c = \frac{2J}{k_B \ln(1 + \sqrt{2})} \approx 2.269 J/k_B
 \end{equation}
-La quale è inferiore alla temperatura critica prevista dalla teoria di campo medio, la quale per il caso bidimensionale è $T_c^{MF} = 4J/k_B$. 
-Il motivo della sovrastima è 
+La quale è inferiore alla temperatura critica prevista dalla teoria di campo medio, la quale per il caso bidimensionale è $T_c^{MF}= 4J/k_B$. 
+La sovrastima della temperatura critica da parte della teoria di campo medio è dovuta al fatto che questa approssimazione non tiene conto delle fluttuazioni locali: 
+ovvero considerà che ogni spin sia soggetto allo stesso campo medio, ignorando le variazioni locali che possono portare a una transizione di fase a temperature più basse.
+L'approssimazione di campo medio risulta quindi più accurata maggiore è il numero di vicini, ovvero in dimensioni più elevate.
+In due dimensioni la teoria di campo medio fornisce una stima qualitativa corretta del comportamento del sistema, ma quantitativamente sovrastima la temperatura critica.
+
+Inoltre vi è una soluzione esatta anche per la magnetizzazione, che è data da:
+\begin{equation}
+    m(T) = \begin{cases}
+    \left[1 - \sinh^{-4}(2J/k_B T)\right]^{1/8} & \text{per } T < T_c \\
+    0 & \text{per } T > T_c
+    \end{cases}
+\end{equation}

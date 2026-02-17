@@ -1,3 +1,72 @@
 \section{Metodo Monte Carlo}
 
 \subsection{Algoritmo di Metropolis}
+
+\subsection{Dettagli sull'implementazione}
+
+\section{Risultati della simulazione}
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Mean Energy_tMC.png}
+        \caption{Energia media}
+        \label{fig:mean_energy}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Mean Magnetization_tMC.png}
+        \caption{Magnetizzazione media}
+        \label{fig:mean_magnetization}
+    \end{subfigure}
+    \caption{Termalizzazione del sistema per due diverse configurazioni iniziali.}
+    \label{fig:simultation_one}
+\end{figure}
+
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Mean Energy_vs_T_errors.png}
+        \caption{Energia media}
+        \label{fig:mean_energy_vs_T}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Mean Magnetization_vs_T_errors.png}
+        \caption{Magnetizzazione media}
+        \label{fig:mean_magnetization_vs_T}
+    \end{subfigure}
+    \caption{Energia media e magnetizzazione media in funzione della temperatura.}
+    \label{fig:simulation_two}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Heat Capacity_vs_T_errors.png}
+        \caption{Calore specifico}
+        \label{fig:heat_capacity}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Susceptibility_vs_T_errors.png}
+        \caption{Suscettibilità}
+        \label{fig:susceptibility}
+    \end{subfigure}
+    \caption{Capacità termica e suscettibilità in funzione della temperatura.}
+    \label{fig:simultation_three}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{spatial_correlation.png}
+    \caption{Correlazione spaziale degli spin a 3 diverse diverse temperature.}
+    \label{fig:correlation}
+\end{figure}
