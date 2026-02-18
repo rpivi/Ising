@@ -45,7 +45,7 @@ def pca_plot(X_pca, T_labels, explained_var_ratio):
     plt.close()
 
 def pca_fpc_T(configs_flat, T_labels):
-    # study the first principal component as a function of T
+    # study the mean absolute value of the first principal component as a function of T
 
     X = np.array([config.flatten() for config in configs_flat])
     T_labels = np.array(T_labels)
@@ -53,15 +53,17 @@ def pca_fpc_T(configs_flat, T_labels):
     pca = PCA(n_components=1)
     X_pca = pca.fit_transform(X)
 
-    #plotting the first principal component vs T
+    mean_abs_fpc = np.array([np.mean(np.abs(X_pca[T_labels == T])) for T in np.unique(T_labels)])
+
+    #plotting the mean absolute value of the firste component vs T
     plt.figure(figsize=(10, 6))
-    plt.scatter(T_labels, X_pca[:, 0], s=50, alpha=0.7, edgecolors='black', linewidth=0.5)
+    plt.scatter(T_labels, mean_abs_fpc, s=50, alpha=0.7, edgecolors='black', linewidth=0.5)
     #line in the Tc
     plt.axvline(x=2.269, color='red', linestyle='--', label='Critical Temperature Tc')
     plt.legend()
     plt.xlabel('Temperature T', fontsize=12)
-    plt.ylabel('First Principal Component', fontsize=12)
-    plt.title('First Principal Component vs Temperature', fontsize=14)
+    plt.ylabel('Mean Absolute Value of the First PC', fontsize=12)
+    plt.title('Mean Absolute First PC vs Temperature', fontsize=14)
     plt.grid(alpha=0.3)
     plt.tight_layout()
     #save in figures folder
@@ -69,7 +71,7 @@ def pca_fpc_T(configs_flat, T_labels):
     plt.close()
 
 def pca_spc_T(configs_flat, T_labels):
-    # study the second principal component as a function of T
+    # study the mean absolute value of the second principal component vs T
 
     X = np.array([config.flatten() for config in configs_flat])
     T_labels = np.array(T_labels)
@@ -77,15 +79,17 @@ def pca_spc_T(configs_flat, T_labels):
     pca = PCA(n_components=2)
     X_pca = pca.fit_transform(X)
 
-    #plotting the second principal component vs T
+    mean_abs_spc = np.array([np.mean(np.abs(X_pca[T_labels == T, 1])) for T in np.unique(T_labels)])
+
+    #plotting the mean absolute value of the second component vs T
     plt.figure(figsize=(10, 6))
-    plt.scatter(T_labels, X_pca[:, 1], s=50, alpha=0.7, edgecolors='black', linewidth=0.5)
+    plt.scatter(T_labels, mean_abs_spc, s=50, alpha=0.7, edgecolors='black', linewidth=0.5)
     #line in the Tc
     plt.axvline(x=2.269, color='red', linestyle='--', label='Critical Temperature Tc')
     plt.legend()
     plt.xlabel('Temperature T', fontsize=12)
-    plt.ylabel('Second Principal Component', fontsize=12)
-    plt.title('Second Principal Component vs Temperature', fontsize=14)
+    plt.ylabel('Mean Absolute Value of Second PC', fontsize=12)
+    plt.title('Mean Absolute Second PC vs Temperature', fontsize=14)
     plt.grid(alpha=0.3)
     plt.tight_layout()
     #save in figures folder

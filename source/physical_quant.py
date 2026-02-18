@@ -22,3 +22,20 @@ def susceptibility(magnetizations, BJ, N):
     M_mean = np.mean(magnetizations)
     chi = (BJ / N) * (M2_mean - M_mean**2)
     return chi
+
+def find_susceptibility_peak(T_s, susceptibility):
+    T_arr   = np.array(T_s)
+    chi_arr = np.array(susceptibility)
+
+    idx_peak = np.argmax(chi_arr)
+    T_peak   = T_arr[idx_peak]
+
+    if 0 < idx_peak < len(T_arr) - 1:
+        dT = T_arr[idx_peak + 1] - T_arr[idx_peak - 1]
+        T_peak_err = dT / 2
+    else:
+        dT = T_arr[1] - T_arr[0]
+        T_peak_err = dT / 2
+
+    return T_peak, T_peak_err
+
