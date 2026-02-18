@@ -1,25 +1,15 @@
 \section{Metodo Monte Carlo}
 
 Lo studio del modello di Ising mediante simulazioni numeriche si basa su tecniche di campionamento stocastico. 
-L’obiettivo è generare configurazioni di spin distribuite secondo la distribuzione di Boltzmann:
-
-\begin{equation}
-P(\{s_i\}) = \frac{1}{Z} e^{-\beta H(\{s_i\})}
-\end{equation}
-
-Poiché il numero totale di configurazioni cresce come $2^N$, un campionamento esaustivo è impraticabile per sistemi macroscopici. 
+L’obiettivo è generare configurazioni di spin distribuite secondo la distribuzione di Boltzmann. Poiché il numero totale di configurazioni cresce come $2^N$, un campionamento esaustivo è impraticabile per sistemi macroscopici. 
 Si utilizza quindi il metodo Monte Carlo con algoritmo di Metropolis per costruire una catena di Markov che converga alla distribuzione canonica.
 
 \subsection{Algoritmo di Metropolis}
 
-L’algoritmo di Metropolis permette di generare una sequenza di configurazioni distribuite secondo la misura di Boltzmann. 
-Per il modello di Ising bidimensionale con Hamiltoniana
-
-\begin{equation}
-H = -J \sum_{\langle i,j \rangle} s_i s_j
-\end{equation}
-
-l’algoritmo procede come segue:
+L’algoritmo di Metropolis permette di generare una sequenza di configurazioni $\{C_0, C_1, C_2, \ldots\}$ tale che,
+dopo un numero sufficiente di passi,
+la distribuzione delle configurazioni sia quella desiderata, ovvero la distribuzione di Boltzmann.
+L’algoritmo procede come segue:
 
 \begin{enumerate}
     \item Si sceglie casualmente un sito $i$ del reticolo.
@@ -56,14 +46,17 @@ Le grandezze fisiche calcolate sono:
 
 \paragraph{Energia media}
 \begin{equation}
-\langle E \rangle = \frac{1}{M} \sum_{k=1}^{M} E_k
+\langle E \rangle = \frac{1}{N} \sum_{k=1}^{N} E_k
 \end{equation}
+Dove $E_k$ è l’energia della configurazione $k$ e $N$ è il numero totale di configurazioni campionate.
 
 \paragraph{Magnetizzazione media}
 \begin{equation}
-\langle |M| \rangle = \frac{1}{M} \sum_{k=1}^{M} |M_k|
+\langle |M| \rangle = \frac{1}{N} \sum_{k=1}^{N} |M_k|
 \end{equation}
+Dove $M_k$ è la magnetizzazione totale della configurazione $k$, si considera il valore assoluto per evitare che le fluttuazioni tra stati con magnetizzazione positiva e negativa si annullino reciprocamente.
 
+Si sono inoltre calcolate il calore specifico $C_V$ e la suscettibilità $\chi$, che sono legate alle fluttuazioni di energia e magnetizzazione rispettivamente Appendice\ref{appendice:calcolo_cv_chi}:
 \paragraph{Calore specifico}
 \begin{equation}
 C_V = \frac{\beta^2}{N} \left( \langle E^2 \rangle - \langle E \rangle^2 \right)
@@ -74,23 +67,15 @@ C_V = \frac{\beta^2}{N} \left( \langle E^2 \rangle - \langle E \rangle^2 \right)
 \chi = \frac{\beta}{N} \left( \langle M^2 \rangle - \langle M \rangle^2 \right)
 \end{equation}
 
-Gli errori statistici sono stati stimati ...
+Inoltre si è stimata la temperatura critica $T_c$ utilizzando il metodo di finite-size scaling, analizzando la posizione del picco della suscettibilità in funzione della dimensione del sistema.
+
+Gli errori statistici sono stati stimati considerando campioni indipendenti e utilizzando l'errore sulla media: ovvero la deviazione standard divisa per la radice del numero di campioni indipendenti.
 
 \section{Risultati della simulazione}
 
 La Figura \ref{fig:simultation_one} mostra l’evoluzione temporale di energia e magnetizzazione per due diverse condizioni iniziali: configurazione ordinata (tutti spin up) e configurazione casuale.
 
 Si osserva che, dopo un certo numero di sweep Monte Carlo, entrambe le evoluzioni convergono agli stessi valori medi, indicando la perdita di memoria della condizione iniziale e il raggiungimento dell’equilibrio termico. Questo comportamento è una verifica numerica dell’ergodicità della dinamica.
-
-La Figura \ref{fig:simulation_two} riporta energia media e magnetizzazione media in funzione della temperatura. 
-
-L’energia varia in modo regolare e continuo, mentre la magnetizzazione mostra un comportamento tipico di una transizione di fase: per basse temperature il sistema presenta ordine ferromagnetico con $\langle |M| \rangle \neq 0$, mentre al di sopra di una temperatura critica $T_c$ la magnetizzazione si annulla nel limite termodinamico.
-
-La Figura \ref{fig:simultation_three} mostra il calore specifico e la suscettibilità. Entrambe le quantità presentano un picco in corrispondenza della temperatura critica. 
-
-Il picco del calore specifico è associato alle fluttuazioni energetiche, mentre quello della suscettibilità è legato alle fluttuazioni della magnetizzazione. L’aumento delle fluttuazioni in prossimità di $T_c$ è una firma della criticità del sistema.
-
-Nel limite di sistema infinito, tali grandezze presentano un comportamento non analitico; nel sistema finito simulato si osserva invece un massimo arrotondato, la cui altezza cresce all’aumentare di $L$.
 
 \begin{figure}[H]
     \centering
@@ -110,6 +95,8 @@ Nel limite di sistema infinito, tali grandezze presentano un comportamento non a
     \caption{Termalizzazione del sistema per due diverse configurazioni iniziali.}
     \label{fig:simultation_one}
 \end{figure}
+
+La Figura \ref{fig:simulation_two} riporta energia media e magnetizzazione media in funzione della temperatura. 
 
 
 \begin{figure}[H]
@@ -131,6 +118,14 @@ Nel limite di sistema infinito, tali grandezze presentano un comportamento non a
     \label{fig:simulation_two}
 \end{figure}
 
+L’energia varia in modo regolare e continuo, mentre la magnetizzazione mostra un comportamento tipico di una transizione di fase: per basse temperature il sistema presenta ordine ferromagnetico con $\langle |M| \rangle \neq 0$, mentre al di sopra di una temperatura critica $T_c$ la magnetizzazione si annulla nel limite termodinamico.
+
+La Figura \ref{fig:simultation_three} mostra il calore specifico e la suscettibilità. Entrambe le quantità presentano un picco in corrispondenza della temperatura critica. 
+
+Il picco del calore specifico è associato alle fluttuazioni energetiche, mentre quello della suscettibilità è legato alle fluttuazioni della magnetizzazione. L’aumento delle fluttuazioni in prossimità di $T_c$ è una firma della criticità del sistema.
+
+Nel limite di sistema infinito, tali grandezze presentano un comportamento non analitico; nel sistema finito simulato si osserva invece un massimo arrotondato, la cui altezza cresce all’aumentare di $L$.
+
 \begin{figure}[H]
     \centering
     \begin{subfigure}{0.48\textwidth}
@@ -149,6 +144,19 @@ Nel limite di sistema infinito, tali grandezze presentano un comportamento non a
     \caption{Capacità termica e suscettibilità in funzione della temperatura.}
     \label{fig:simultation_three}
 \end{figure}
+
+\subsection{Stima della temperatura critica e finite-size scaling}
+
+Per stimare la temperatura critica $T_c$ del sistema, si è utilizzato il metodo di finite-size scaling. Esso si basa sull’osservazione che, 
+in un sistema finito, le grandezze fisiche non presentano discontinuità ma mostrano un comportamento arrotondato, 
+con picchi che si spostano e si accentuano al crescere della dimensione del sistema.
+
+L'equazione di finite-size scaling per la suscettibilità $\chi$ è data da:
+\begin{equation}
+    T_c^{*}(L) = T_c + a L^{-1/\nu}
+\end{equation}
+dove $T_c^{*}(L)$ è la temperatura alla quale si osserva il picco della suscettibilità per un sistema di dimensione $L$, $T_c$ è la temperatura critica nel limite termodinamico, $a$ è una costante e $\nu$ è l'esponente critico associato alla lunghezza di correlazione.
+Utilizzando i dati ottenuti dalle simulazioni per diverse dimensioni del sistema, è stato possibile effettuare un fit lineare di $T_c^{*}(L)$ in funzione di $L^{-1/\nu}$, con $\nu = 1$ per il modello di Ising bidimensionale.
 
 \begin{figure}[H]
     \centering

@@ -2,79 +2,26 @@
 
 \subsection{Introduzione alla PCA}
 
-La Principal Component Analysis (PCA) è una tecnica lineare di apprendimento non supervisionato utilizzata per la riduzione della dimensionalità dei dati. 
-L’obiettivo della PCA è identificare le direzioni nello spazio delle feature lungo le quali i dati presentano la massima varianza.
-
-Attraverso una trasformazione ortogonale, i dati originali vengono proiettati in un nuovo sistema di coordinate in cui le nuove variabili, dette componenti principali, sono linearmente indipendenti e ordinate per varianza decrescente.
+La Principal Component Analysis (PCA) è una tecnica lineare di apprendimento non supervisionato utilizzata 
+per la riduzione della dimensionalità dei dati. 
+L’obiettivo della PCA è identificare le direzioni nello spazio delle feature lungo le quali i 
+dati presentano la massima varianza. Attraverso una trasformazione ortogonale, i dati originali vengono 
+proiettati in un nuovo sistema di coordinate in cui le nuove variabili, dette componenti principali, sono 
+linearmente indipendenti e ordinate per varianza decrescente.
 
 La prima componente principale individua la direzione lungo la quale la varianza dei dati è massima.  
-La seconda componente è ortogonale alla prima e massimizza la varianza residua, e così via.
+La seconda componente è ortogonale alla prima e massimizza la varianza residua, e così via.In questo modo è possibile 
+rappresentare i dati in uno spazio di dimensione ridotta mantenendo l’informazione più rilevante dal punto di vista statistico Appendice\ref{appendice:pca}.
 
-In questo modo è possibile rappresentare i dati in uno spazio di dimensione ridotta mantenendo l’informazione più rilevante dal punto di vista statistico.
+\subsection{Applicazione al modello di Ising}
 
-\subsection{Algoritmo}
+Nel modello di Ising, ogni configurazione Monte Carlo può essere rappresentata come un punto nello spazio $\mathbb{R}^{L^2}$,
+ in cui ogni coordinata corrisponde allo spin di un sito del reticolo.Applicando la PCA a configurazioni generate a diverse temperature, 
+ emerge un risultato fisicamente significativo: 
+ la prima componente principale risulta fortemente correlata con la magnetizzazione totale del sistema.
 
-Sia $X$ la matrice dei dati centrati rispetto alla media, di dimensione $N \times p$, dove:
-\begin{itemize}
-    \item $N$ è il numero di configurazioni campionate,
-    \item $p$ è il numero di feature di ciascun dato.
-\end{itemize}
-
-Nel caso del modello di Ising, $p = L^2$ rappresenta il numero di siti del reticolo, mentre $N$ è il numero di configurazioni Monte Carlo generate.
-
-La matrice di covarianza è definita come:
-
-\begin{equation}
-    C = \frac{1}{N-1} X^T X
-\end{equation}
-
-La PCA consiste nel diagonalizzare la matrice di covarianza:
-
-\begin{equation}
-    C v_i = \lambda_i v_i
-\end{equation}
-
-dove $v_i$ sono gli autovettori (componenti principali) e $\lambda_i$ gli autovalori associati.
-
-In pratica, si utilizza la decomposizione ai valori singolari (SVD) della matrice dei dati centrati:
-
-\begin{equation}
-    X = U S V^T
-\end{equation}
-
-Sostituendo nella definizione di $C$ si ottiene:
-
-\begin{equation}
-    C = \frac{1}{N-1} V S^2 V^T
-\end{equation}
-
-Gli autovettori della matrice di covarianza coincidono quindi con le colonne di $V$, mentre gli autovalori sono dati da:
-
-\begin{equation}
-    \lambda_i = \frac{S_i^2}{N-1}
-\end{equation}
-
-La riduzione della dimensionalità si ottiene proiettando i dati sulle prime $g$ componenti principali:
-
-\begin{equation}
-    \tilde{X} = X \tilde{V}
-\end{equation}
-
-dove $\tilde{V}$ contiene le prime $g$ colonne di $V$.  
-La matrice $\tilde{X}$ ha dimensione $N \times g$.
-
-\subsection{Interpretazione fisica nel modello di Ising}
-
-Nel modello di Ising, ogni configurazione Monte Carlo può essere rappresentata come un punto nello spazio $\mathbb{R}^{L^2}$, in cui ogni coordinata corrisponde allo spin di un sito del reticolo.
-
-Applicando la PCA a configurazioni generate a diverse temperature, emerge un risultato fisicamente significativo: la prima componente principale risulta fortemente correlata con la magnetizzazione totale del sistema.
-
-Infatti, nella fase ferromagnetica ($T < T_c$) le configurazioni si raggruppano in due regioni distinte \ref{fig:pca}, corrispondenti agli stati con magnetizzazione positiva e negativa.  
-Nella fase paramagnetica ($T > T_c$), invece, le configurazioni si distribuiscono attorno a valori prossimi a zero.
-
-...
-
-Questo comportamento evidenzia come una tecnica puramente statistica sia in grado di catturare una quantità fisica fondamentale e di individuare la transizione di fase senza alcuna informazione supervisata \cite{Hu2017}.
+Osservando la Figura \ref{fig:pca} si può notare come le configurazioni nella fase ferromagnetica ($T < T_c$) si raggruppano in due regioni distinte, corrispondenti agli stati con magnetizzazione positiva e negativa.  
+Nella fase paramagnetica ($T > T_c$), invece, le configurazioni si distribuiscono attorno a valori prossimi a zero. Questo comportamento evidenzia come una tecnica puramente statistica sia in grado di catturare una quantità fisica fondamentale del sistema studiato e di individuare la transizione \cite{Hu2017}.
 
 \begin{figure}[H]
     \centering
@@ -83,20 +30,22 @@ Questo comportamento evidenzia come una tecnica puramente statistica sia in grad
     \label{fig:pca}
 \end{figure}
 
+Per approfondire ulteriormente la relazione tra le componenti principali e la temperatura, è possibile analizzare il valore medio assoluto delle prime due componenti principali in funzione della temperatura.
+
 \begin{figure}[H]
     \centering
     \begin{subfigure}{0.48\textwidth}
         \centering
         \includegraphics[width=\textwidth]{PCA_first_component_vs_T.png}
-        \caption{Prima Componente Pricipale}
-        \label{fig:fcp}
+        \caption{Valore medio assoluto della prima componente principale}
+        \label{fig:fcp_mean_abs}
     \end{subfigure}
     \hfill
     \begin{subfigure}{0.48\textwidth}
         \centering
         \includegraphics[width=\textwidth]{PCA_second_component_vs_T.png}
-        \caption{Seconda Componente Principale}
-        \label{fig:scp}
+        \caption{Valore medio assoluto della seconda somponente principale}
+        \label{fig:scp_mean_abs}
     \end{subfigure}
     \caption{Studio delle componenti principali in funzione della temperatura.}
     \label{fig:ising_two}

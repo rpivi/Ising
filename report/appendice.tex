@@ -1,3 +1,133 @@
 \section{Appendice}
 
 \subsection{Espansione della suscettività magnetica}\label{appendice:calcolo_suscettivita}
+
+\paragraph{Espansione per T<T_c:}
+
+\paragraph{Espansione per T>T_c:}
+
+\paragraph{Espansione per T \approx T_c:}
+
+\subsection{Capacità termica, suscettibilità e fluttuazioni}\label{appendice:calcolo_cv_chi}
+
+\paragraph{Capacità Termica:}
+
+La definizione di capacità termica a volume costante è data da:
+\begin{equation}
+C_V = \left( \frac{\partial \langle E \rangle}{\partial T} \right)_V
+\end{equation}
+
+Utilizzando la definizione di media termica, possiamo riscrivere $C_V$ in termini delle fluttuazioni di energia:
+\begin{equation}
+    C_V = \frac{\partial}{\partial T} \left( \frac{1}{Z} \sum_{\{s_i\}} E(\{s_i\}) e^{-\beta E(\{s_i\})} \right)
+\end{equation}
+
+Proseguendo con il calcolo, si ottiene:
+\begin{equation}
+    C_V = \frac{1}{Z} \sum_{\{s_i\}} \frac{E^2(\{s_i\})}{k_b T^2} e^{-\beta E(\{s_i\})} - \frac{1}{Z^2} \frac{\partial Z}{\partial T}\sum_{\{s_i\}} E(\{s_i\}) e^{-\beta E(\{s_i\})}
+\end{equation}
+
+Ricordando che l'energia media è data da:
+\begin{equation}
+    \langle E \rangle = k_b T^2 \frac{1}{Z} \frac{\partial Z}{\partial T}
+\end{equation}
+
+Si ottiene infine:
+
+\begin{equation}
+    C_V = \langle E^2 \rangle - \langle E \rangle^2
+\end{equation}
+Mostrando così che la capacità termica è proporzionale alla varianza dell'energia, ovvero alle fluttuazioni di energia del sistema.
+
+\paragraph{Suscettività magnetica:}
+La suscettività magnetica è definita come la risposta del sistema 
+a un campo magnetico esterno $h$:
+\begin{equation}
+    \chi = \left( \frac{\partial \langle M \rangle}{\partial h} \right)_{h=0}
+\end{equation}
+La funzione di partizione e il valore di aspettazione della 
+magnetizzazione in presenza di $h$ sono:
+\begin{equation}
+    Z(h) = \sum_{\{s_i\}} e^{-\beta E(\{s_i\}) + \beta h M(\{s_i\})},
+    \qquad
+    \langle M \rangle = \frac{1}{Z}\sum_{\{s_i\}} M\, e^{-\beta E + \beta h M}
+\end{equation}
+Applicando la regola di derivazione del rapporto:
+\begin{equation}
+    \chi 
+    = \frac{\partial \langle M \rangle}{\partial h}
+    = \frac{1}{Z}\frac{\partial}{\partial h}\!\sum_{\{s_i\}} M\,e^{-\beta E+\beta h M}
+    \;-\;
+    \frac{\langle M \rangle}{Z}\frac{\partial Z}{\partial h}
+\end{equation}
+Poiché $\dfrac{\partial}{\partial h}e^{-\beta E+\beta h M} = \beta M\,e^{-\beta E+\beta h M}$, 
+i due termini diventano:
+\begin{equation}
+    \frac{\partial}{\partial h}\!\sum_{\{s_i\}} M\,e^{-\beta E+\beta h M}
+    = \beta \sum_{\{s_i\}} M^2\, e^{-\beta E+\beta h M}
+    = \beta Z \langle M^2 \rangle
+\end{equation}
+\begin{equation}
+    \frac{\partial Z}{\partial h}
+    = \beta \sum_{\{s_i\}} M\, e^{-\beta E+\beta h M}
+    = \beta Z \langle M \rangle
+\end{equation}
+Sostituendo e valutando in $h = 0$:
+\begin{equation}
+    \chi = \beta\!\left(\langle M^2 \rangle - \langle M \rangle^2\right)
+\end{equation}
+La suscettività magnetica è quindi proporzionale alla varianza della magnetizzazione. Questa relazione 
+e quella precendete per la capacità termica sono un caso particolare 
+del \emph{teorema fluttuazione-dissipazione}: la risposta lineare del sistema 
+a una perturbazione esterna è determinata dalle fluttuazioni all'equilibrio.
+
+\section{PCA: Principal Component Analysis}\label{appendice:pca}
+
+Sia $X$ la matrice dei dati centrati rispetto alla media, di dimensione $N \times p$, dove:
+\begin{itemize}
+    \item $N$ è il numero di configurazioni campionate,
+    \item $p$ è il numero di feature di ciascun dato.
+\end{itemize}
+
+Nel caso del modello di Ising, $p = L^2$ rappresenta il numero di siti del reticolo, mentre $N$ è il numero di configurazioni Monte Carlo generate.
+
+La matrice di covarianza è definita come:
+
+\begin{equation}
+    C = \frac{1}{N-1} X^T X
+\end{equation}
+
+La PCA consiste nel diagonalizzare la matrice di covarianza:
+
+\begin{equation}
+    C v_i = \lambda_i v_i
+\end{equation}
+
+dove $v_i$ sono gli autovettori (componenti principali) e $\lambda_i$ gli autovalori associati.
+
+In pratica, si utilizza la decomposizione ai valori singolari (SVD) della matrice dei dati centrati:
+
+\begin{equation}
+    X = U S V^T
+\end{equation}
+
+Sostituendo nella definizione di $C$ si ottiene:
+
+\begin{equation}
+    C = \frac{1}{N-1} V S^2 V^T
+\end{equation}
+
+Gli autovettori della matrice di covarianza coincidono quindi con le colonne di $V$, mentre gli autovalori sono dati da:
+
+\begin{equation}
+    \lambda_i = \frac{S_i^2}{N-1}
+\end{equation}
+
+La riduzione della dimensionalità si ottiene proiettando i dati sulle prime $g$ componenti principali:
+
+\begin{equation}
+    \tilde{X} = X \tilde{V}
+\end{equation}
+
+dove $\tilde{V}$ contiene le prime $g$ colonne di $V$.  
+La matrice $\tilde{X}$ ha dimensione $N \times g$.

@@ -1,56 +1,90 @@
 \section{Il Modello di Ising}
 
 \subsection{Storia}
-Il modello di Ising è un modello matematico utilizzato in fisica statistica per descrivere il comportamento di sistemi magnetici. 
-Fu introdotto ideato da Wilhelm Lenz nel 1920, che lo propose al suo studente di dottorato Ernst Ising come problema da risolvere. 
-Ising nel 1925 pubblica la soluzione del modello in una dimensione \cite{ising1925}, solo nel 1944 Onsager 
-pubblicherà la soluzione per il caso bidimensionale. 
-Il modello rappresenta un sistema di spin su una griglia, dove ogni spin può assumere due stati:
- +1 (spin up) o -1 (spin down). Gli spin sono fra loro interagenti e possono essere influenzati da un campo magnetico esterno.
-L'allinemento degli spin in una direzione specifica può portare a un comportamento collettivo 
-che si manifesta come magnetizzazione. Il modello di Ising è stato ampiamente studiato per comprendere 
-le transizioni di fase e il comportamento critico nei sistemi magnetici, ed è diventato un punto
-di riferimento fondamentale nella fisica statistica. 
-Inoltre il modello ha avuto successo anche in altri campi del sapere come le reti neurali (reti di Hopfield), biofisica e sociologia(modelli di opinione),
-dimostrando la sua versatilità e importanza come strumento di modellizzazione in diverse discipline scientifiche.
+Il modello di Ising è un modello matematico della fisica statistica introdotto per descrivere il comportamento collettivo di sistemi magnetici. 
+Esso fu ideato da Wilhelm Lenz nel 1920, che lo propose come problema al suo studente di dottorato Ernst Ising.
+Nel 1925 Ising pubblicò la soluzione esatta del modello in una dimensione \cite{ising1925}, concludendo erroneamente che il modello non presentasse una transizione di fase.
+Solo nel 1944 Lars Onsager ottenne la soluzione esatta del modello bidimensionale in assenza di campo magnetico esterno, dimostrando l’esistenza di una transizione di fase a temperatura critica finita.
+
+Il modello descrive un sistema di spin discreti disposti su un reticolo, in cui ogni spin può assumere due valori, $+1$ (spin up) o $-1$ (spin down).
+L’interazione locale tra gli spin può dare origine a un comportamento collettivo macroscopico, manifestato dalla magnetizzazione spontanea.
+
+Nel corso degli anni, il modello di Ising è diventato un paradigma fondamentale per lo studio delle transizioni di fase e del comportamento critico.
+Grazie alla sua semplicità concettuale e alla ricchezza dei fenomeni che descrive, esso ha trovato applicazioni anche al di fuori della fisica,
+ad esempio nelle reti neurali artificiali (modello di Hopfield), in biofisica e in sociologia, nei cosiddetti modelli di opinione.
 
 \subsection{Definizione del Modello}
-Per gli scopi di questo lavoro, ci concentreremo sul modello di Ising bidimensionale su un reticolo quadrato,
-anche se il modello può essere definito in qualsiasi dimensione e su diversi tipi di reticoli.
-Consideriamo un reticolo con $N$ siti, dove ogni sito $i$ è occupato da uno spin $s_i$ che può assumere i valori +1 o -1.
-L'energia totale del sistema è data dalla seguente espressione:
+In questo lavoro ci concentreremo sul modello di Ising bidimensionale definito su un reticolo quadrato,
+sebbene il modello possa essere generalizzato a qualsiasi dimensione e a diverse topologie di reticolo.
+
+Consideriamo un sistema composto da $N$ siti, ciascuno occupato da uno spin $s_i \in \{+1, -1\}$.
+L’Hamiltoniana del sistema è data da:
 \begin{equation}
-E = -J \sum_{\langle i,j \rangle} s_i s_j - h \sum_{i} s_i  
+E = -J \sum_{\langle i,j \rangle} s_i s_j - h \sum_{i} s_i ,
 \end{equation}
+dove la somma $\langle i,j \rangle$ è estesa alle coppie di siti adiacenti (vicini più prossimi),
+$J$ è la costante di accoppiamento e $h$ rappresenta un campo magnetico esterno uniforme.
 
-Il primo termine rappresenta l’interazione tra coppie di spin adiacenti: dove  $\langle i,j \rangle$ indica che la somma è effettuata sui siti adiacenti del reticolo ovvero sui vicini più prossimi. 
-Il parametro $J$ è la costante di accoppiamento:
-
+Il segno di $J$ determina la natura dell’interazione:
 \begin{itemize}
-\item Se $J > 0$, l’interazione è ferromagnetica e favorisce l’allineamento degli spin.
-\item Se $J < 0$, l’interazione è antiferromagnetica.
+\item $J > 0$: interazione ferromagnetica, che favorisce l’allineamento degli spin;
+\item $J < 0$: interazione antiferromagnetica, che favorisce l’anti-allineamento.
 \end{itemize}
 
-Infatti per $J>0$ l'energia è minima quando gli spin sono allineati (tutti +1 o tutti -1), mentre per $J<0$ l'energia è minima quando gli spin sono anti-allineati (ad esempio, in un reticolo quadrato, ogni spin è circondato da spin di segno opposto).
-
-Nel presente lavoro si considera il caso ferromagnetico ($J>0$) e campo esterno nullo ($h=0$), così che l’Hamiltoniana si riduce a:
-
+Nel seguito considereremo esclusivamente il caso ferromagnetico ($J>0$) in assenza di campo esterno ($h=0$),
+per cui l’Hamiltoniana si riduce a:
 \[
-E = -J \sum_{\langle i,j \rangle} s_i s_j.
+E = -J \sum_{\langle i,j \rangle} s_i s_j .
 \]
 
 L’equilibrio termodinamico del sistema è descritto dalla distribuzione di Boltzmann:
-
 \[
-P(\{s_i\}) = \frac{1}{Z} e^{-\beta H},
+P(\{s_i\}) = \frac{1}{Z} e^{-\beta E(\{s_i\})},
 \]
-
-dove $\beta = 1/(k_B T)$ e $Z$ è la funzione di partizione:
-
+dove $\beta = 1/(k_B T)$ e la funzione di partizione è definita come:
 \begin{equation}
-Z = \sum_{\{s_i\}} e^{-\beta E(\{s_i\})}    
+Z = \sum_{\{s_i\}} e^{-\beta E(\{s_i\})}.
 \end{equation}
 
-Dal punto di vista fisico, a basse temperature l’energia domina e il sistema tende ad assumere configurazioni ordinate con spin allineati. Ad alte temperature, invece, le fluttuazioni termiche prevalgono e il sistema si trova in uno stato disordinato.
+A basse temperature il termine energetico domina e il sistema tende verso configurazioni ordinate con spin allineati.
+Ad alte temperature, invece, le fluttuazioni termiche prevalgono e il sistema si trova in una fase disordinata.
 
-In due dimensioni e campo nullo, il modello presenta una transizione di fase a una temperatura critica finita $T_c$, che separa una fase ferromagnetica (magnetizzazione spontanea non nulla) da una fase paramagnetica (magnetizzazione nulla).
+Nel caso bidimensionale e in assenza di campo esterno, il modello di Ising presenta una transizione di fase a una temperatura critica finita $T_c$,
+che separa una fase ferromagnetica con magnetizzazione spontanea non nulla da una fase paramagnetica con magnetizzazione nulla.
+
+\subsection{Simmetria $\mathbb{Z}_2$}
+In assenza di campo esterno ($h=0$), l’Hamiltoniana è invariante sotto la trasformazione discreta:
+\begin{equation}
+\mathcal{P}:\quad s_i \longrightarrow -s_i \qquad \forall\, i .
+\end{equation}
+
+Infatti, invertendo simultaneamente tutti gli spin, si ottiene:
+\begin{equation}
+E[\{-s_i\}] = -J \sum_{\langle i,j \rangle} (-s_i)(-s_j)
+= -J \sum_{\langle i,j \rangle} s_i s_j = E[\{s_i\}].
+\end{equation}
+
+Il gruppo di simmetria associato è $\mathbb{Z}_2 = \{\mathbf{1}, \mathcal{P}\}$,
+con $\mathcal{P}^2 = \mathbf{1}$.
+
+\subsection{Parametro d’Ordine}
+Un parametro d’ordine è una grandezza macroscopica che distingue le diverse fasi di un sistema.
+Nel modello di Ising il parametro d’ordine naturale è la magnetizzazione media per spin:
+\begin{equation}
+m = \frac{1}{N} \sum_{i=1}^{N} \langle s_i \rangle .
+\end{equation}
+
+La media termica di un osservabile $\mathcal{O}$ è definita come:
+\begin{equation}
+\langle \mathcal{O} \rangle =
+\frac{1}{Z} \sum_{\{s_i\}} \mathcal{O}\, e^{-\beta E(\{s_i\})}.
+\end{equation}
+
+Il comportamento del parametro d’ordine è il seguente:
+\begin{equation}
+m =
+\begin{cases}
+0 & T > T_c \quad \text{(fase disordinata, simmetria integra)} \\[6pt]
+\pm m_0(T) \neq 0 & T < T_c \quad \text{(fase ordinata, simmetria rotta)} .
+\end{cases}
+\end{equation}

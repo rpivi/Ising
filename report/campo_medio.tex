@@ -6,10 +6,9 @@ La funzione di partizione del modello di Ising nel caso in cui il campo magnetic
 Z = \sum_{\{s_i\}} e^{-\beta E(\{s_i\})} = \sum_{\{s_i\}} e^{\beta J \sum_{\langle i,j \rangle} s_i s_j}
 \end{equation}
 
-Calcolata la funzione di partizione possiamo ottenere tutte le grandezze termodinamiche del sistema.
-
-La teoria di campo medio ci permette di calcolare un'approssimazione della funzione di partizione, 
-assumendo che ogni spin sia influenzato da un campo magnetico medio generato dagli altri spin \cite{stanford_sml_susskind}.
+Calcolata la funzione di partizione possiamo ottenere tutte le grandezze termodinamiche del sistema. La teoria di campo medio ci permette 
+di calcolare un'approssimazione della funzione di partizione, assumendo che ogni spin sia influenzato 
+da un campo magnetico medio generato dagli altri spin \cite{stanford_sml_susskind}.
 In $d$ dimensioni ogni spin ha $z = 2 \ d $ vicini, l'energia di un singolo spin è data da:
 \begin{equation}
 E_i = -J s_i \sum_{j=1}^z s_j
@@ -37,7 +36,8 @@ Confrontandola questa espressione con l'espressione precedente dell'energia otte
 \begin{equation}
     m = \langle s_i \rangle = \tanh(\beta J z m)
 \end{equation}
-Questa è una equazione trascendentale, che è possibile risolvere numericamente\cite{essential_statistical_physics} e graficamente come in figura \ref{fig:kennett_trascendente} .
+Questa è una equazione trascendentale, che è possibile risolvere numericamente\cite{essential_statistical_physics} 
+e graficamente come in figura \ref{fig:kennett_trascendente} .
 
 \begin{figure}[H]
     \centering
@@ -70,19 +70,19 @@ La suscettività magnetica è definita come la derivata della magnetizzazione ri
 Calcolando la derivata otteniamo:
 
 \begin{equation}
-    \chi = N (\beta + \beta J z \frac{\partial m}{\partial h}) \\sech(\beta J z m)^2
+    \chi = N (\beta + \beta J z \frac{\chi}{N}) \\sech(\beta J z m)^2
 \end{equation}
 Da cui otteniamo:
 \begin{equation}
     \chi = \frac{N \beta \ sech(\beta J z m)^2}{1 - \beta J z \ sech(\beta J z m)^2}
 \end{equation}
-Dove possiamo notare che $J z \beta = T_c / T$, da cui è poi possibile espandere la separatamente per $T > T_c$ e $T < T_c$ ottenendo [Appendice \ref{appendice:calcolo_suscettivita}]:
+Dove possiamo notare che $J z \beta = T_c / T$, da cui è poi possibile espandere la separatamente per $T > T_c$, $T < T_c$ e $T \approx T_c$ ottenendo [Appendice \ref{appendice:calcolo_suscettivita}]:
 
 \begin{equation}
     \chi = \begin{cases}
-    \frac{N \beta}{(1 - T_c / T)} & \text{per } T > T_c \\
     \frac{N \beta}{2 (T_c / T - 1)} & \text{per } T < T_c \\
-    \frac{N \beta}{2 (T_c / T - 1)} & \text{per } T \approx T_c
+    \frac{N \beta}{2 (T_c / T - 1)} & \text{per } T \approx T_c \\
+    \frac{N \beta}{(1 - T_c / T)} & \text{per } T > T_c 
     \end{cases}
 \end{equation}
 
