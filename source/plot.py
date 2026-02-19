@@ -26,7 +26,7 @@ def plot_fss(T_s, results, L_s, observable, ylabel, title):
         yerr = results[L][observable + '_err']
         ax.errorbar(T_s, y, yerr=yerr, label=f'L={L}', marker='o', capsize=3)
 
-    ax.axvline(x=2.269, color='gray', linestyle='--', label='$T_c$ (esatto)')
+    ax.axvline(x=2.269, color='red', linestyle='--', label='$T_c$ (esatto)')
     ax.set_xlabel('T')
     ax.set_ylabel(ylabel)
     ax.set_title(title)
@@ -37,35 +37,16 @@ def plot_fss(T_s, results, L_s, observable, ylabel, title):
     fig.savefig(f'figures/fss_{observable}.png', dpi=150)
     plt.close(fig)
 
-
-def finite_size_scaling_Tc(L_s, T_peaks, T_peaks_err):
-    nu_ising_2d=1.0
-    L_arr = np.array(L_s, dtype=float)
-    T_arr = np.array(T_peaks)
-    err_arr = np.array(T_peaks_err)
-
-    def model(L, Tc, a):
-        return Tc + a * L**(-1.0 / nu_ising_2d)
-
-    popt, pcov = curve_fit(model, L_arr, T_arr, sigma=err_arr,
-                           absolute_sigma=True, p0=[2.269, 0.5])
-    Tc_fit, a_fit = popt
-    Tc_err = np.sqrt(pcov[0, 0])
-
-    L_fine = np.linspace(L_arr.min() * 0.8, L_arr.max() * 1.5, 500)
-    fig, ax = plt.subplots(figsize=(7, 4))
-    ax.errorbar(L_arr, T_arr, yerr=err_arr, fmt='o', color='black',
-                label='$T_{peak}(L)$', capsize=4, zorder=5)
-    ax.plot(L_fine, model(L_fine, *popt), '-',
-            label=f'fit ν={nu_ising_2d}\n$T_c = {Tc_fit:.4f} \\pm {Tc_err:.4f}$')
-    ax.axhline(2.2692, color='gray', linestyle=':', label='$T_c$ esatto = 2.2692')
-    ax.set_xlabel('L')
-    ax.set_ylabel('$T_{peak}(L)$')
-    ax.set_title('Finite-Size Scaling — picchi della suscettività')
-    ax.legend()
-    #grid
-    ax.grid()
+def config_plot(configs, T_s):
+    #plot of 3 configuration of the lattice at different temperatures: ordered, critical and disordered
+    fig, axes = plt.subplots(1, 3, figsize=(15, 5))
+    #titles with the corresponding temperatures
+    titles = [f"Ordered (T={T_s[0]:.2f})", f"Critical (T={T_s[len(T_s) // 2]:.2f})", f"Disordered (T={T_s[-1]:.2f})"]
+    for ax, config, title in zip(axes, configs, titles):
+        #plot the configuration in black and white
+        im = ax.imshow(config, cmap='gray', vmin=-1, vmax=1)
+        ax.set_title(title)
+        ax.axis('off')
     fig.tight_layout()
-    fig.savefig('figures/fss_Tc.png', dpi=150)
+    fig.savefig('figures/configurations.png', dpi=150)
     plt.close(fig)
-    return Tc_fit, Tc_err

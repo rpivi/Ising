@@ -8,34 +8,35 @@ import pca as pca
 def main():
 
 # Part1: Thermalization analysis of different initial states at fixed BJ
-    L = 60  # Lattice size
+    L = 50  # Lattice size
     N = L * L  # Total number of spins
     T = 1.4
     BJ = 1/T    # Inverse temperature
-    nsweep_therm = {20: 500, 40: 1000, 60: 1500} # Number of sweeps for thermalization for each L
+    nsweep_therm = 1000 # Number of sweeps for thermalization 
     sweep_skip_therm = 1
     np.random.seed(42)
 
     spins_r = lat.create_lattice(L, initial_state='random')
     spins_u = lat.create_lattice(L, initial_state='up')
 
-    _, magn_r, tot_energies_r, spins_r = metro.metropolis(spins_r, nsweep_therm[L], sweep_skip_therm, BJ)
-    _, magn_u, tot_energies_u, spins_u= metro.metropolis(spins_u, nsweep_therm[L], sweep_skip_therm, BJ)
+    _, magn_r, tot_energies_r, spins_r = metro.metropolis(spins_r, nsweep_therm, sweep_skip_therm, BJ)
+    _, magn_u, tot_energies_u, spins_u= metro.metropolis(spins_u, nsweep_therm, sweep_skip_therm, BJ)
 
     plot.plot_two_steps(magn_r/N, magn_u/N, name="Mean Magnetization", name1="Random Init", name2="Up Init", BJ=BJ)
     plot.plot_two_steps(tot_energies_r/N, tot_energies_u/N, name="Mean Energy", name1="Random Init", name2="Up Init", BJ=BJ)
     print("Thermalization analysis completed and plots saved.")
 
     # Part2: Phase transition analysis + finite-size scaling + T_c estimation
-    L_s = [20, 40, 60]  # Lattice sizes
+    L_s = [30,50]  # Lattice sizes
     T_s = np.concatenate([
-    np.linspace(1.5,  2.2,  7, endpoint=False),   # ordered phase: T < T_c
-    np.linspace(2.2,  2.3,  10, endpoint=False),   # critical region: T ~ T_c
-    np.linspace(2.3, 3.0, 8) ])    # disordered phase: T > T_c 
+    np.linspace(1.7, 2.2, 5, endpoint=False),   # ordered phase: T < T_c:
+    np.linspace(2.2,  2.3,  5, endpoint=False),   # critical region: T ~ T_c
+    np.linspace(2.3, 2.8, 6) ])    # disordered phase: T > T_c 
+    T_s = np.sort(np.append(T_s, 2.269)) # Ensure T_c is included in the temperature list
     
     BJ_s = [1/T for T in T_s]
 
-    nsamples = 200
+    nsamples = 300
     sweeps_skip = 50 # Number of sweeps between samples to ensure decorrelation
     nsweep_tot = nsamples * sweeps_skip # Total number of sweeps to get nsamples independent measurements
 
@@ -54,12 +55,13 @@ def main():
 
     for L in L_s:
         N = L * L
+        spins = lat.create_lattice(L, initial_state='random')
         for T, BJ in zip(T_s, BJ_s):
             # Thermalization
-            spins = lat.create_lattice(L, initial_state='random')
-            _, _, _, spins = metro.metropolis(spins, nsweep_therm[L], sweep_skip_therm, BJ)
+            nsweep_therm_adaptive = metro.get_therm_sweeps(T) #500 sweeps for T far from T_c, 1000 sweeps for T close to T_c
+            _, _, _, spins = metro.metropolis(spins, nsweep_therm_adaptive, sweep_skip_therm, BJ)
 
-            # Misure
+            # Measurement of observables
             net_spins, abs_magnet, net_energies, _, configs = metro.metropolis(
                 spins, nsweep_tot, sweeps_skip, BJ, return_configs=True
             )
@@ -86,6 +88,7 @@ def main():
 
             results[L]['spins_configs'].append(configs)
             print(f"  L={L}, T={T:.2f} completato")
+            spins = configs[-1]  # Use the last configuration as the starting point for the next temperature
 
         print(f"Completate misure per L={L}")
 
@@ -98,27 +101,38 @@ def main():
                   ylabel='Cv', title='Capacità termica')
     plot.plot_fss(T_s, results, L_s, observable='susceptibility',
                   ylabel='χ', title='Suscettività')
-    
-    # Estimate T_c from the peaks of susceptibility for each L
-    T_peaks     = []
-    T_peaks_err = []
 
+    # T_c from Chi and Cv peak estimation
+    T_c_estimates = []
+    T_c_estimates_cv = []
     for L in L_s:
-        T_peak, T_peak_err = ph.find_susceptibility_peak(T_s, results[L]['susceptibility'])
-        T_peaks.append(T_peak)
-        T_peaks_err.append(T_peak_err)
+        T_c, T_c_err = ph.find_T_peak(T_s, results[L]['susceptibility'])
+        T_c_estimates.append((T_c, T_c_err))
+        print(f"Estimated T_c from χ for L={L}: {T_c:.3f} ± {T_c_err:.3f}")
+        T_c_cv, T_c_cv_err = ph.find_T_peak(T_s, results[L]['heat_capacity'])
+        T_c_estimates_cv.append((T_c_cv, T_c_cv_err))
+        print(f"Estimated T_c from Cv for L={L}: {T_c_cv:.3f} ± {T_c_cv_err:.3f}")
 
-    Tc_fsc, Tc_err = plot.finite_size_scaling_Tc(L_s, T_peaks, T_peaks_err)
-    print(f"Estimated T_c from finite-size scaling: {Tc_fsc:.4f} ± {Tc_err:.4f}")
-
-    # Part3: PCA analysis of spin configurations at L=20
-    L_pca = 20
+    #plotting of 3 configuration of the lattice at different temperatures: ordered, critical and disordered for L=50
+    #taking the last configuration for each temperature as representative
+    L_plot = 50
+    config_ordered = results[L_plot]['spins_configs'][0][-1]  # First temperature (ordered phase)
+    config_critical = results[L_plot]['spins_configs'][len(T_s) // 2][-1]  # Middle temperature (critical region)
+    config_disordered = results[L_plot]['spins_configs'][-1][-1]  # Last temperature (disordered phase)
+    configs_to_plot = [config_ordered, config_critical, config_disordered]
+    plot.config_plot(configs_to_plot, T_s)
+    
+    # Part3: PCA analysis of spin configurations at L=50
+    L_pca = 50
     all_configs, T_labels = pca.prepare_pca_data(results[L_pca]['spins_configs'], T_s)
     X_pca, explained_var_ratio = pca.perform_pca(all_configs, n_components=2)
     pca.pca_plot(X_pca, T_labels, explained_var_ratio)
-    pca.pca_fpc_T(all_configs, T_labels)
-    pca.pca_spc_T(all_configs, T_labels)
+    mean_abs_fpc = pca.pca_fpc_T(X_pca, T_labels)
+    mean_bas_spc = pca.pca_spc_T(X_pca, T_labels)
+    corr_pc1_m = np.corrcoef(mean_abs_fpc, results[L_pca]['mean_magnetizations'])[0,1]
+    print(f"Correlation between PC1 and magnetization: {corr_pc1_m:.3f}")
+    corr_pc2_chi= np.corrcoef(mean_bas_spc, results[L_pca]['susceptibility'])[0,1]
+    print(f"Correlation between PC2 and susceptibility: {corr_pc2_chi:.3f}")
     print("PCA analysis completed and plots saved.")
-
 if __name__ == "__main__":
     main()

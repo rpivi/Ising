@@ -145,22 +145,10 @@ Nel limite di sistema infinito, tali grandezze presentano un comportamento non a
     \label{fig:simultation_three}
 \end{figure}
 
-\subsection{Stima della temperatura critica e finite-size scaling}
-
-Per stimare la temperatura critica $T_c$ del sistema, si è utilizzato il metodo di finite-size scaling. Esso si basa sull’osservazione che, 
-in un sistema finito, le grandezze fisiche non presentano discontinuità ma mostrano un comportamento arrotondato, 
-con picchi che si spostano e si accentuano al crescere della dimensione del sistema.
-
-L'equazione di finite-size scaling per la suscettibilità $\chi$ è data da:
-\begin{equation}
-    T_c^{*}(L) = T_c + a L^{-1/\nu}
-\end{equation}
-dove $T_c^{*}(L)$ è la temperatura alla quale si osserva il picco della suscettibilità per un sistema di dimensione $L$, $T_c$ è la temperatura critica nel limite termodinamico, $a$ è una costante e $\nu$ è l'esponente critico associato alla lunghezza di correlazione.
-Utilizzando i dati ottenuti dalle simulazioni per diverse dimensioni del sistema, è stato possibile effettuare un fit lineare di $T_c^{*}(L)$ in funzione di $L^{-1/\nu}$, con $\nu = 1$ per il modello di Ising bidimensionale.
-
+Infine la Figura \ref{fig:configs_plot} mostra tre configurazioni di spin campionate a temperature diverse: una nella fase ferromagnetica ($T < T_c$), una in prossimità della transizione ($T \approx T_c$) e una nella fase paramagnetica ($T > T_c$).
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.6\textwidth]{fss_Tc.png}
-    \caption{Stima della temperatura critica $T_c$ mediante finite-size scaling.}
-    \label{fig:Tc_fss}
+    \includegraphics[width=0.6\textwidth]{configuration.png}
+    \caption{Tre configurazioni di spin campionate a temperature diverse: $T < T_c$, $T \approx T_c$ e $T > T_c$.}
+    \label{fig:configs_plot}
 \end{figure}

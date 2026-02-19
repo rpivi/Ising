@@ -44,20 +44,14 @@ def pca_plot(X_pca, T_labels, explained_var_ratio):
     plt.savefig("figures/PCA_spin_configurations.png", dpi=300)
     plt.close()
 
-def pca_fpc_T(configs_flat, T_labels):
+def pca_fpc_T(X_pca, T_labels):
     # study the mean absolute value of the first principal component as a function of T
-
-    X = np.array([config.flatten() for config in configs_flat])
     T_labels = np.array(T_labels)
-
-    pca = PCA(n_components=1)
-    X_pca = pca.fit_transform(X)
-
-    mean_abs_fpc = np.array([np.mean(np.abs(X_pca[T_labels == T])) for T in np.unique(T_labels)])
+    mean_abs_fpc = np.array([np.mean(np.abs(X_pca[T_labels == T, 0])) for T in np.unique(T_labels)])
 
     #plotting the mean absolute value of the firste component vs T
     plt.figure(figsize=(10, 6))
-    plt.scatter(T_labels, mean_abs_fpc, s=50, alpha=0.7, edgecolors='black', linewidth=0.5)
+    plt.scatter(np.unique(T_labels), mean_abs_fpc, s=50, alpha=0.7, edgecolors='black', linewidth=0.5)
     #line in the Tc
     plt.axvline(x=2.269, color='red', linestyle='--', label='Critical Temperature Tc')
     plt.legend()
@@ -69,21 +63,16 @@ def pca_fpc_T(configs_flat, T_labels):
     #save in figures folder
     plt.savefig("figures/PCA_first_component_vs_T.png", dpi=300)
     plt.close()
+    return mean_abs_fpc
 
-def pca_spc_T(configs_flat, T_labels):
+def pca_spc_T(X_pca, T_labels):
     # study the mean absolute value of the second principal component vs T
-
-    X = np.array([config.flatten() for config in configs_flat])
     T_labels = np.array(T_labels)
-
-    pca = PCA(n_components=2)
-    X_pca = pca.fit_transform(X)
-
     mean_abs_spc = np.array([np.mean(np.abs(X_pca[T_labels == T, 1])) for T in np.unique(T_labels)])
 
     #plotting the mean absolute value of the second component vs T
     plt.figure(figsize=(10, 6))
-    plt.scatter(T_labels, mean_abs_spc, s=50, alpha=0.7, edgecolors='black', linewidth=0.5)
+    plt.scatter(np.unique(T_labels), mean_abs_spc, s=50, alpha=0.7, edgecolors='black', linewidth=0.5)
     #line in the Tc
     plt.axvline(x=2.269, color='red', linestyle='--', label='Critical Temperature Tc')
     plt.legend()
@@ -95,4 +84,5 @@ def pca_spc_T(configs_flat, T_labels):
     #save in figures folder
     plt.savefig("figures/PCA_second_component_vs_T.png", dpi=300)
     plt.close()
+    return mean_abs_spc
 

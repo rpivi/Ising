@@ -8,9 +8,6 @@ def total_energy(spins):
     arr = - spins * convolve(spins, kern, mode='wrap', cval=0) #periodic boundary conditions
     return arr.sum()/2
 
-def abs_magnetization(spins):
-    return abs(spins.sum())
-
 def heat_capacity(energies, BJ, N):
     E2_mean = np.mean(np.array(energies)**2)
     E_mean = np.mean(energies)
@@ -23,19 +20,23 @@ def susceptibility(magnetizations, BJ, N):
     chi = (BJ / N) * (M2_mean - M_mean**2)
     return chi
 
-def find_susceptibility_peak(T_s, susceptibility):
+def find_T_peak(T_s, observable):
     T_arr   = np.array(T_s)
-    chi_arr = np.array(susceptibility)
+    obs_arr = np.array(observable)
 
-    idx_peak = np.argmax(chi_arr)
+    idx_peak = np.argmax(obs_arr)
     T_peak   = T_arr[idx_peak]
 
-    if 0 < idx_peak < len(T_arr) - 1:
-        dT = T_arr[idx_peak + 1] - T_arr[idx_peak - 1]
-        T_peak_err = dT / 2
+    # Estimate the error on T_peak using the width of the peak at half maximum
+    half_max = obs_arr[idx_peak] / 2
+    # Find the indices where the susceptibility is greater than half maximum
+    indices_half_max = np.where(obs_arr >= half_max)[0]
+    if len(indices_half_max) > 1:
+        T_left = T_arr[indices_half_max[0]]
+        T_right = T_arr[indices_half_max[-1]]
+        T_peak_err = (T_right - T_left) / 2
     else:
-        dT = T_arr[1] - T_arr[0]
-        T_peak_err = dT / 2
+        T_peak_err = 0.0
 
     return T_peak, T_peak_err
 

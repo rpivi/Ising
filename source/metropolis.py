@@ -11,6 +11,10 @@ def metropolis(spins, nsweep, sweeps_skip, BJ, return_configs=False):
     abs_magnet = np.zeros(n_measurements)
     net_energies = np.zeros(n_measurements)
     configs = [] if return_configs else None
+
+    boltz = {
+    4: np.exp(-BJ*4),
+    8: np.exp(-BJ*8) }
     
     measurement_counter = 0
     
@@ -28,14 +32,15 @@ def metropolis(spins, nsweep, sweeps_skip, BJ, return_configs=False):
             
             dE = 2 * spin_i * neighbors
             
-            if (dE <= 0) or (np.random.rand() < np.exp(-BJ*dE)):
+            if (dE <= 0) or (np.random.rand() < boltz[dE]):
                 spins_arr[i, j] = -spin_i
                 energy += dE
         
         # Measure after each sweep if appropriate
         if sweep % sweeps_skip == 0:
-            net_spins[measurement_counter] = spins_arr.sum()
-            abs_magnet[measurement_counter] = ph.abs_magnetization(spins_arr)
+            M = spins_arr.sum()
+            net_spins[measurement_counter] = M
+            abs_magnet[measurement_counter] = abs(M)
             net_energies[measurement_counter] = energy
             if return_configs:
                 configs.append(spins_arr.copy())
@@ -45,3 +50,11 @@ def metropolis(spins, nsweep, sweeps_skip, BJ, return_configs=False):
         return net_spins, abs_magnet, net_energies, spins_arr, configs
     else:
         return net_spins, abs_magnet, net_energies, spins_arr
+
+def get_therm_sweeps(T,nsweep_base=500, nsweep_critical=1000, delta=0.2):
+    # For temperatures close to the critical temperature T_c, we need more sweeps to ensure 
+    #proper thermalization due to critical slowing down.
+    T_c=2.269
+    if abs(T - T_c) < delta:
+        return nsweep_critical
+    return nsweep_base

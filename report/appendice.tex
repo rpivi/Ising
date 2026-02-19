@@ -2,11 +2,38 @@
 
 \subsection{Espansione della suscettività magnetica}\label{appendice:calcolo_suscettivita}
 
-\paragraph{Espansione per T<T_c:}
+Ricordando $z J \beta = \frac{T_c}{T}$, possiamo espandere la suscettività magnetica $\chi$ in potenze di $\frac{T_c}{T}$, 
+ottenendo tre espansioni distinte a seconda del regime di temperatura considerato.
 
-\paragraph{Espansione per T>T_c:}
+\paragraph{Espansione per $T < T_c$}
+Ricordando $sech^2(x)=\frac{1}{\cosh^2(x)} \approx 1 - x^2$ per $x \approx 0$.
+In $T<T_c$ possiamo espandere $sech^2(\beta J z m) = sech^2(m \frac{T_c}{T}) = 1 - (m \frac{T_c}{T})^2$, da cui:
 
-\paragraph{Espansione per T \approx T_c:}
+\begin{equation}
+    \chi = \frac{N \beta (1 - m^2 \frac{T_c^2}{T^2})}{1 - \frac{T_c}{T} (1 - m^2 \frac{T_c^2}{T^2})} = \frac{N \beta (1 - m^2 \frac{T_c^2}{T^2})}{m^2 \frac{T_c^3}{T^3} + 1 - \frac{T_c}{T}} 
+    \approx \frac{N \beta}{2\left(\frac{T_c}{T} - 1\right)}
+\end{equation}
+dove nell'ultimo passaggio si è usata l'espansione di $m^2$ per $T<T_c$.
+
+\paragraph{Espansione per $T \approx T_c$}
+Vicino a $T_c$, si può mostrare che $m^2 \approx 3\left(1 - \frac{T}{T_c}\right)$, da cui:
+
+\begin{equation}
+    sech^2(\beta J z m) \approx 1 - 3\left(1 - \frac{T}{T_c}\right) = 3\frac{T}{T_c} - 2
+\end{equation}
+
+Sostituendo nella formula generale:
+\begin{equation}
+    \chi = \frac{N\beta\left(3\frac{T}{T_c} - 2\right)}{1 - \frac{T_c}{T}\left(3\frac{T}{T_c} - 2\right)}
+    = \frac{N\beta\left(3\frac{T}{T_c} - 2\right)}{3 - 2\frac{T_c}{T} - 1} 
+    \approx \frac{N\beta}{2\left(\frac{T_c}{T} - 1\right)}
+\end{equation}
+
+\paragraph{Espansione per $T>T_c$:}
+Ricordando che $sech (0) =1$, si ottiene:
+\begin{equation}
+    \chi = \frac{N \beta}{1 - z J \beta} = \frac{N \beta}{1-\frac{T_c}{T}} = \frac{N}{k_b(T-T_c)}
+\end{equation}
 
 \subsection{Capacità termica, suscettibilità e fluttuazioni}\label{appendice:calcolo_cv_chi}
 
@@ -81,7 +108,7 @@ e quella precendete per la capacità termica sono un caso particolare
 del \emph{teorema fluttuazione-dissipazione}: la risposta lineare del sistema 
 a una perturbazione esterna è determinata dalle fluttuazioni all'equilibrio.
 
-\section{PCA: Principal Component Analysis}\label{appendice:pca}
+\subsection{PCA: Principal Component Analysis}\label{appendice:pca}
 
 Sia $X$ la matrice dei dati centrati rispetto alla media, di dimensione $N \times p$, dove:
 \begin{itemize}
