@@ -12,7 +12,7 @@ def main():
     N = L * L  # Total number of spins
     T = 1.4
     BJ = 1/T    # Inverse temperature
-    nsweep_therm = 1000 # Number of sweeps for thermalization 
+    nsweep_therm = 4000 # Number of sweeps for thermalization 
     sweep_skip_therm = 1
     np.random.seed(42)
 
@@ -28,15 +28,16 @@ def main():
 
     # Part2: Phase transition analysis + finite-size scaling + T_c estimation
     L_s = [30,50]  # Lattice sizes
-    T_s = np.concatenate([
-    np.linspace(1.7, 2.2, 5, endpoint=False),   # ordered phase: T < T_c:
-    np.linspace(2.2,  2.3,  5, endpoint=False),   # critical region: T ~ T_c
-    np.linspace(2.3, 2.8, 6) ])    # disordered phase: T > T_c 
-    T_s = np.sort(np.append(T_s, 2.269)) # Ensure T_c is included in the temperature list
+    T_c = 2.0 / np.log(1 + np.sqrt(2)) 
+    T_low  = np.linspace(1.4,  T_c - 0.2, 10, endpoint=False )   # fase ordinata lontana
+    T_near = np.linspace(T_c - 0.2, T_c + 0.2, 10, endpoint=False)  # zona critica — griglia fitta
+    T_high = np.linspace(T_c + 0.2, 3.0, 10)    # fase disordinata lontana
+
+    T_s = np.concatenate([T_low, T_near, T_high])
     
     BJ_s = [1/T for T in T_s]
 
-    nsamples = 300
+    nsamples = 200
     sweeps_skip = 50 # Number of sweeps between samples to ensure decorrelation
     nsweep_tot = nsamples * sweeps_skip # Total number of sweeps to get nsamples independent measurements
 
@@ -58,7 +59,11 @@ def main():
         spins = lat.create_lattice(L, initial_state='random')
         for T, BJ in zip(T_s, BJ_s):
             # Thermalization
-            nsweep_therm_adaptive = metro.get_therm_sweeps(T) #500 sweeps for T far from T_c, 1000 sweeps for T close to T_c
+            if T == T_s[0]:
+                # For the first temperature, we start from a random configuration and thermalize for a fixed number of sweeps
+                nsweep_therm_adaptive = 4500
+            else:
+                nsweep_therm_adaptive = metro.get_therm_sweeps(T,L)
             _, _, _, spins = metro.metropolis(spins, nsweep_therm_adaptive, sweep_skip_therm, BJ)
 
             # Measurement of observables
@@ -69,12 +74,12 @@ def main():
             # Observables
             m  = abs_magnet          # |M|
             E  = net_energies
-            mean_m  = np.mean(m)
+            mean_m  = np.mean(m) # mean magnetization per site
 
             results[L]['mean_magnetizations'].append(mean_m / N)
             results[L]['mean_energies'].append(np.mean(E) / N)
-            results[L]['heat_capacity'].append(ph.heat_capacity(E, BJ, N))
-            results[L]['susceptibility'].append(ph.susceptibility(net_spins, BJ, N))
+            results[L]['heat_capacity'].append(ph.heat_capacity(E, T, N))
+            results[L]['susceptibility'].append(ph.susceptibility(abs_magnet, T, N))
 
             # Assumption of inidipendent samples: error on mean via standard deviation / sqrt(nsamples)
             results[L]['mean_magnetizations_err'].append(np.std(m / N) / np.sqrt(nsamples))
@@ -87,9 +92,10 @@ def main():
             results[L]['susceptibility_err'].append((BJ / N) * spin_variance_err)
 
             results[L]['spins_configs'].append(configs)
-            print(f"  L={L}, T={T:.2f} completato")
-            spins = configs[-1]  # Use the last configuration as the starting point for the next temperature
-
+            spins = configs[-1]  # Start next T from last config to speed up thermalization
+            #flip all spins so that the PCA analysis is not biased by the sign of the magnetization i
+            #in the ordered phase evrey time we start a new temperature, this is equivalent to start with a random configuration at each temperature, but it allows us to save time in the thermalization phase
+            spins = -spins
         print(f"Completate misure per L={L}")
 
     # Plot finite-size scaling

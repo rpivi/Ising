@@ -1,24 +1,37 @@
 import lattice as lat
 import numpy as np
 from scipy.ndimage import convolve, generate_binary_structure
+from numba import njit
 
+@njit(cache=True)
 def total_energy(spins):
-    kern = generate_binary_structure(2,1)
-    kern[1,1] = False
-    arr = - spins * convolve(spins, kern, mode='wrap', cval=0) #periodic boundary conditions
-    return arr.sum()/2
+    L = spins.shape[0]
+    E = 0.0
+    for i in range(L):
+        for j in range(L):
+            s = spins[i, j]
+            E -= s * (spins[(i + 1) % L, j] + spins[i, (j + 1) % L])
+    return E
 
-def heat_capacity(energies, BJ, N):
-    E2_mean = np.mean(np.array(energies)**2)
-    E_mean = np.mean(energies)
-    C = (BJ**2 / N) * (E2_mean - E_mean**2)
-    return C
+def heat_capacity(energies, T, N):
+    """
+    Calore specifico per sito: Cv = Var(E) / (T^2 * N)
+    Input: energies = array di energie totali (non per sito)
+           T  = temperatura (non BJ)
+           N  = numero di siti = L*L
+    """
+    energies = np.asarray(energies, dtype=np.float64)
+    return np.var(energies) / (T**2 * N)
 
-def susceptibility(magnetizations, BJ, N):
-    M2_mean = np.mean(np.array(magnetizations)**2)
-    M_mean = np.mean(magnetizations)
-    chi = (BJ / N) * (M2_mean - M_mean**2)
-    return chi
+def susceptibility(magnetizations, T, N):
+    """
+    Suscettività per sito: chi = Var(|M|) / (T * N)
+    Input: magnetizations = array di |M| totali (non per sito)
+           T  = temperatura
+           N  = numero di siti
+    """
+    magnetizations = np.asarray(magnetizations, dtype=np.float64)
+    return np.var(magnetizations) / (T * N)
 
 def find_T_peak(T_s, observable):
     T_arr   = np.array(T_s)

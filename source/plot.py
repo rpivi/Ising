@@ -39,9 +39,9 @@ def plot_fss(T_s, results, L_s, observable, ylabel, title):
 
 def config_plot(configs, T_s):
     #plot of 3 configuration of the lattice at different temperatures: ordered, critical and disordered
-    fig, axes = plt.subplots(1, 3, figsize=(15, 5))
+    fig, axes = plt.subplots(1, 3, figsize=(16, 8))
     #titles with the corresponding temperatures
-    titles = [f"Ordered (T={T_s[0]:.2f})", f"Critical (T={T_s[len(T_s) // 2]:.2f})", f"Disordered (T={T_s[-1]:.2f})"]
+    titles = [f"Ordered (T={T_s[0]:.2f})", f"Near Critical (T={T_s[len(T_s) // 2]:.2f})", f"Disordered (T={T_s[-1]:.2f})"]
     for ax, config, title in zip(axes, configs, titles):
         #plot the configuration in black and white
         im = ax.imshow(config, cmap='gray', vmin=-1, vmax=1)
