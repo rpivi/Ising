@@ -3,15 +3,12 @@
 \subsection{Storia}
 Il modello di Ising è un modello matematico della fisica statistica introdotto per descrivere il comportamento collettivo di sistemi magnetici. 
 Esso fu ideato da Wilhelm Lenz nel 1920, che lo propose come problema al suo studente di dottorato Ernst Ising.
-Nel 1925 Ising pubblicò la soluzione esatta del modello in una dimensione \cite{ising1925}, concludendo erroneamente che il modello non presentasse una transizione di fase.
-Solo nel 1944 Lars Onsager ottenne la soluzione esatta del modello bidimensionale in assenza di campo magnetico esterno, dimostrando l’esistenza di una transizione di fase a temperatura critica finita.
-
-Il modello descrive un sistema di spin discreti disposti su un reticolo, in cui ogni spin può assumere due valori, $+1$ (spin up) o $-1$ (spin down).
-L’interazione locale tra gli spin può dare origine a un comportamento collettivo macroscopico, manifestato dalla magnetizzazione spontanea.
-
+Nel 1925 Ising pubblicò la soluzione esatta del modello in una dimensione \cite{ising1925}.
+Nel 1944 Lars Onsager ottenne la soluzione esatta \cite{larsOsanger} del modello bidimensionale in assenza di campo magnetico esterno,
+dimostrando l’esistenza di una transizione di fase a temperatura critica finita, che nel caso del modello unidimensionale è invece assente.
 Nel corso degli anni, il modello di Ising è diventato un paradigma fondamentale per lo studio delle transizioni di fase e del comportamento critico.
 Grazie alla sua semplicità concettuale e alla ricchezza dei fenomeni che descrive, esso ha trovato applicazioni anche al di fuori della fisica,
-ad esempio nelle reti neurali artificiali (modello di Hopfield), in biofisica e in sociologia, nei cosiddetti modelli di opinione.
+ad esempio nelle reti neurali artificiali (reti di Hopfield) e in sociologia, nei modelli di opinione.
 
 \begin{figure}[H]
     \centering
@@ -38,7 +35,7 @@ ad esempio nelle reti neurali artificiali (modello di Hopfield), in biofisica e 
     \label{fig:Lenz_Ising_Onsager}
 \end{figure}
 
-\subsection{Definizione del Modello}
+\subsection{Il modello}
 In questo lavoro ci concentreremo sul modello di Ising bidimensionale definito su un reticolo quadrato,
 sebbene il modello possa essere generalizzato a qualsiasi dimensione e a diverse topologie di reticolo.
 
@@ -71,11 +68,11 @@ dove $\beta = 1/(k_B T)$ e la funzione di partizione è definita come:
 Z = \sum_{\{s_i\}} e^{-\beta E(\{s_i\})}.
 \end{equation}
 
-A basse temperature il termine energetico domina e il sistema tende verso configurazioni ordinate con spin allineati.
-Ad alte temperature, invece, le fluttuazioni termiche prevalgono e il sistema si trova in una fase disordinata.
-
-Nel caso bidimensionale e in assenza di campo esterno, il modello di Ising presenta una transizione di fase a una temperatura critica finita $T_c$,
-che separa una fase ferromagnetica con magnetizzazione spontanea non nulla da una fase paramagnetica con magnetizzazione nulla.
+La media termica di un osservabile $\mathcal{O}$ è definita come:
+\begin{equation}
+\langle \mathcal{O} \rangle =
+\frac{1}{Z} \sum_{\{s_i\}} \mathcal{O}\, e^{-\beta E(\{s_i\})}.
+\end{equation}
 
 \subsection{Simmetria $\mathbb{Z}_2$}
 In assenza di campo esterno ($h=0$), l’Hamiltoniana è invariante sotto la trasformazione discreta:
@@ -93,17 +90,15 @@ Il gruppo di simmetria associato è $\mathbb{Z}_2 = \{\mathbf{1}, \mathcal{P}\}$
 con $\mathcal{P}^2 = \mathbf{1}$.
 
 \subsection{Parametro d’Ordine}
-Un parametro d’ordine è una grandezza macroscopica che distingue le diverse fasi di un sistema.
-Nel modello di Ising il parametro d’ordine naturale è la magnetizzazione media per spin:
+Un parametro d’ordine è una grandezza macroscopica che distingue le diverse fasi di un sistema per il modello di Ising, il parametro d’ordine è la magnetizzazione media $m$. 
+
 \begin{equation}
-m = \frac{1}{N} \sum_{i=1}^{N} \langle s_i \rangle .
+m = \frac{1}{N} \sum_{i=1}^{N} s_i = \langle s_i \rangle
 \end{equation}
 
-La media termica di un osservabile $\mathcal{O}$ è definita come:
-\begin{equation}
-\langle \mathcal{O} \rangle =
-\frac{1}{Z} \sum_{\{s_i\}} \mathcal{O}\, e^{-\beta E(\{s_i\})}.
-\end{equation}
+La magnetizzazione media è una misura dell'ordine del sistema:
+se $m=0$ il sistema è in uno stato disordinato con spin orientati casualmente, 
+mentre se $m= \pm \ 1$ il sistema è in uno stato ordinato con tutti gli spin allineati nella stessa direzione.
 
 Il comportamento del parametro d’ordine è il seguente:
 \begin{equation}
@@ -113,3 +108,9 @@ m =
 \pm m_0(T) \neq 0 & T < T_c \quad \text{(fase ordinata, simmetria rotta)} .
 \end{cases}
 \end{equation}
+
+Sebbene l'Hamiltoniana del modello sia invariante per inversione globale degli spin, 
+per $T<T_C$ lo stato di equilibrio del sistema non possiede più tale simmetria. Il sistema "sceglie" 
+collettivamente una delle due direzioni preferenziali, portando a un valore di $m$ positivo o negativo. Questo fenomeno 
+è una proprietà puramente emergente: nelle leggi di interazione locale non vi è alcuna preferenza per una direzione specifica; 
+la scelta emerge esclusivamente dalla cooperazione macroscopica degli spin.

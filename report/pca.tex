@@ -7,16 +7,15 @@ per la riduzione della dimensionalità dei dati.
 L’obiettivo della PCA è identificare le direzioni nello spazio delle feature lungo le quali i 
 dati presentano la massima varianza. Attraverso una trasformazione ortogonale, i dati originali vengono 
 proiettati in un nuovo sistema di coordinate in cui le nuove variabili, dette componenti principali, sono 
-linearmente indipendenti e ordinate per varianza decrescente.
-
-La prima componente principale individua la direzione lungo la quale la varianza dei dati è massima.  
-La seconda componente è ortogonale alla prima e massimizza la varianza residua, e così via.In questo modo è possibile 
-rappresentare i dati in uno spazio di dimensione ridotta mantenendo l’informazione più rilevante dal punto di vista statistico Appendice\ref{appendice:pca}.
+linearmente indipendenti e ordinate per varianza decrescente.La prima componente principale individua 
+la direzione lungo la quale la varianza dei dati è massima.  
+La seconda componente è ortogonale alla prima e massimizza la varianza residua, e così via.
+In questo modo è possibile rappresentare i dati in uno spazio di dimensione ridotta mantenendo l’informazione più rilevante dal punto di vista statistico Appendice\ref{appendice:pca}.
 
 \subsection{Applicazione al modello di Ising}
 
 Nel modello di Ising, ogni configurazione Monte Carlo può essere rappresentata come un punto nello spazio $\mathbb{R}^{L^2}$,
- in cui ogni coordinata corrisponde allo spin di un sito del reticolo.Applicando la PCA a configurazioni generate a diverse temperature, 
+ in cui ogni coordinata corrisponde allo spin di un sito del reticolo. Applicando la PCA a configurazioni generate a diverse temperature, 
  emerge un risultato fisicamente significativo: 
  la prima componente principale risulta fortemente correlata con la magnetizzazione totale del sistema.
 
@@ -51,3 +50,9 @@ Per approfondire ulteriormente la relazione tra le componenti principali e la te
     \label{fig:ising_two}
 \end{figure}
 
+Si è infine calcolata la correlazione tra il valore medio del valore assoluto della prima componente principale 
+e la magnetizzazione media ottenendo un valore di $r \approx 1$, inoltre si è calcolata la correlazione 
+tra il valore medio del valore assoluto della seconda componente principale e la suscettibilità ottenendo 
+un valore di $r \approx 0.7$. Questi risultati confermano ulteriormente che la prima componente principale
+ è strettamente legata alla magnetizzazione del sistema, mentre la seconda componente mimica il comportamento
+  della suscettibilità, evidenziando come la PCA riesca a identificare le caratteristiche fisiche più rilevanti del modello di Ising.

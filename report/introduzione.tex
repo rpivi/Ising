@@ -1,17 +1,30 @@
 \section{Introduzione}
+Per gran parte della storia della scienza moderna, il riduzionismo ha rappresentato la bussola metodologica predominante: 
+l'idea che, per comprendere un sistema, sia sufficiente scomporlo nelle sue parti costituenti e studiarne le leggi fondamentali. Tuttavia,
+nel 1972, il Premio Nobel Philip Anderson pubblicò su Science un articolo intitolato "More is Different" \cite{anderson}, 
+scardinando questa visione.
 
-Le transizioni di fase rappresentano uno dei fenomeni più rilevanti nello studio dei sistemi complessi: 
-proprietà macroscopiche emergono da interazioni microscopiche locali. 
-Comprendere l’origine di tali fenomeni è uno degli obiettivi centrali della fisica statistica.
+Anderson sosteneva che la capacità di ridurre tutto a semplici leggi fondamentali non implica 
+la capacità di ricostruire l'universo a partire da esse. Al crescere della complessità e del numero 
+di componenti di un sistema, appaiono proprietà totalmente nuove, non deducibili in modo banale dalle 
+leggi che governano i singoli elementi. Questo fenomeno è noto come comportamento emergente. I comportamenti emergenti sono proprietà macroscopiche 
+di un sistema di cui i singoli componenti non sono portatori. Le proprietà macroscopiche 
+non sono deducibili dalle leggi dei singoli, ma emergono dunque dall'interazione di molti elementi.
 
-Un esempio paradigmatico è il modello di Ising, che descrive un sistema di variabili binarie (spin) interagenti su un reticolo.
-Nonostante la sua apparente semplicità, il modello - in più di una dimensione - presenta una transizione di fase 
-tra uno stato disordinato ad alta temperatura e uno stato ordinato a bassa temperatura, caratterizzato da magnetizzazione spontanea. Il modello di Ising costituisce quindi un laboratorio teorico ideale per studiare concetti fondamentali quali ordine,
-rottura spontanea di simmetria, temperatura critica e comportamento critico.
+Un esempio paradigmatico per comprendere il concetto di emergenza è il modello di Ising. Esso descrive un sistema di spin interagenti su 
+un reticolo. Ogni spin può assumere due stati, rappresentati da +1 (spin up) e -1 (spin down), e interagisce con i suoi vicini più prossimi.
+Il modello di Ising è stato originariamente proposto per studiare il comportamento magnetico dei materiali ferromagnetici, in particolare di studiarne la transizione 
+di fase tra uno stato disordinato ad alta temperatura e uno stato ordinato a bassa temperatura. La transizione di fase è un fenomeno emergente: essa non è infatti riconducibile alle proprietà del singolo spin —
+il quale non possiede intrinsecamente una temperatura critica o una fase —
+ma scaturisce esclusivamente dalla interazione collettive. Sotto la temperatura critica il sistema "sceglie" collettivamente 
+una direzione preferenziale di orientazione, trasformando un insieme di interazioni 
+locali in un ordine macroscopico manifestato dalla magnetizzazione spontanea.
 
-L’obiettivo di questo lavoro è analizzare la transizione di fase nel modello di Ising attraverso tre prospettive complementari. In primo luogo, verrà presentata la teoria di campo medio, che fornisce una descrizione analitica approssimata del fenomeno e consente di stimare la temperatura critica.
+L’obiettivo di questo lavoro è analizzare la transizione di fase nel modello di Ising attraverso tre prospettive complementari. In primo luogo,
+verrà presentata la teoria di campo medio, che fornisce una descrizione analitica approssimata del fenomeno e consente di stimare la temperatura critica.
 Successivamente, si studierà il modello tramite simulazioni numeriche Monte Carlo (MC) basate sull’algoritmo di Metropolis,
-analizzando grandezze termodinamiche quali energia, magnetizzazione, suscettibilità e capacità termica al variare della temperatura.
+analizzando grandezze termodinamiche quali energia ($E$), magnetizzazione media ($m$), suscettibilità ($\chi$) e capacità termica ($C_v$)
+al variare della temperatura. Inoltrè è stata stimata la temperatura crtica ($T_C$).
 Infine, verrà applicata la Principal Component Analysis (PCA) alle configurazioni generate con MC, 
 osservando come l'approccio con strumenti di machine learning non supervisionato 
-abbia le potenzialità di scoprire transizioni di fase e di riconoscere paramtri d'ordine esclusivamente dalle caratteristiche dei dati.
+abbia le potenzialità di scoprire transizioni di fase e di riconoscere il parametro d'ordine esclusivamente dalle caratteristiche dei dati.

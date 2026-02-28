@@ -1,1 +1,24 @@
 \section{Conclusioni}
+In questo lavoro è stato studiato il modello di Ising bidimensionale attraverso tre approcci distinti, mostrando 
+come i tre approcci si rivelino complementari e sinergici nello studio del modello: 
+la teoria di campo medio offre intuizione analitica, le simulazioni MC permettono di quantificare con precisione 
+le osservabili termodinamiche, 
+e la PCA dimostra il potenziale degli strumenti di data science nell'esplorazione di sistemi fisici complessi.
+
+La teoria di campo medio ha fornito una descrizione analitica della transizione, 
+stimando una temperatura critica $T_C^{MF}= \frac{4J}{k_b}$, che sovrastima il valore esatto di Onsager$ \approx 2.269 \frac{J}{k_b}$.
+Tale discrepanza è dovuta al fatto che sono state trascurate le fluttuazioni locali degli spin, che risultano particolarmente rilevanti in prossimità della transizione di fase.
+
+Le simulazioni Monte Carlo con algoritmo di Metropolis hanno consentito 
+di riprodurre numericamente le principali grandezze termodinamiche del sistema. I risultati ottenuti
+sono in buon accordo con la soluzione esatta: le stime della temperatura critica, ricavate 
+dal picco della suscettività e del calore specifico sono compatibili con il valore esatto calcolato da Onsager entro 
+gli errori stimati.
+
+Infine, l'applicazione della PCA alle configurazioni generate con 
+Monte Carlo ha mostrato come tecniche di apprendimento 
+automatico non supervisionato siano in grado di identificare 
+automaticamente il parametro d'ordine del sistema e la transizione di fase, 
+senza alcuna conoscenza a priori della fisica sottostante. La prima componente principale
+risulta correlata quasi perfettamente con la magnetizzazione ($r \approx \ 1$), mentre 
+la seconda componente riflette il comportamento della suscettività ($ r \approx \ 0.7).

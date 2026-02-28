@@ -4,42 +4,105 @@ Lo studio del modello di Ising mediante simulazioni numeriche si basa su tecnich
 L’obiettivo è generare configurazioni di spin distribuite secondo la distribuzione di Boltzmann. Poiché il numero totale di configurazioni cresce come $2^N$, un campionamento esaustivo è impraticabile per sistemi macroscopici. 
 Si utilizza quindi il metodo Monte Carlo con algoritmo di Metropolis per costruire una catena di Markov che converga alla distribuzione canonica.
 
-\subsection{Algoritmo di Metropolis}
+\subsection{Processi e catene di Markov}
 
-L’algoritmo di Metropolis permette di generare una sequenza di configurazioni $\{C_0, C_1, C_2, \ldots\}$ tale che,
-dopo un numero sufficiente di passi,
-la distribuzione delle configurazioni sia quella desiderata, ovvero la distribuzione di Boltzmann.
-L’algoritmo procede come segue:
+Un processo di Markov è un processo stocastico caratterizzato dalla proprietà di assenza di memoria: 
+l’evoluzione futura del sistema dipende esclusivamente dallo stato corrente e non dalla storia passata. 
+Nel contesto delle simulazioni Monte Carlo, l’insieme delle configurazioni microscopiche del sistema 
+\(\{C\}\) costituisce lo spazio degli stati, mentre la dinamica è descritta da una catena di Markov discreta 
+nel tempo.
 
-\begin{enumerate}
-    \item Si sceglie casualmente un sito $i$ del reticolo.
-    \item Si propone il flip dello spin $s_i \rightarrow -s_i$.
-    \item Si calcola la variazione di energia $\Delta E$ associata al flip.
-    \item Il flip viene accettato con probabilità
-    \begin{equation}
-    P_{\text{acc}} = \min\left(1, e^{-\beta \Delta E}\right).
-    \end{equation}
-\end{enumerate}
+Una catena di Markov è definita da una matrice di transizione \(P(C_i \to C_j)\), che rappresenta la 
+probabilità di passare dalla configurazione \(C_i\) alla configurazione \(C_j\) in un singolo passo Monte Carlo. 
+Per garantire che la distribuzione di probabilità asintotica coincida con la distribuzione di Boltzmann, 
+la catena deve soddisfare due proprietà fondamentali:
 
-Questo criterio garantisce il rispetto della condizione di bilancio dettagliato:
+\begin{itemize}
+    \item \textbf{Ergodicità:} ogni configurazione deve essere raggiungibile da qualunque altra in un numero finito di passi.
+    \item \textbf{Aperiodicità:} il sistema non deve essere intrappolato in cicli deterministici.
+\end{itemize}
+
+Nel modello di Ising con dinamica di flip di singolo spin, entrambe le condizioni sono soddisfatte, 
+garantendo l’esistenza di una distribuzione stazionaria unica.
+
+\subsection{Master equation e bilancio dettagliato}
+
+L’evoluzione temporale della probabilità \(\pi_i(t)\) di trovare il sistema nella configurazione \(C_i\) 
+è descritta dalla \textbf{Master Equation}, che in forma continua può essere scritta come:
 
 \begin{equation}
-\frac{P(C \rightarrow C')}{P(C' \rightarrow C)} = e^{-\beta (E_{C'} - E_C)},
+\frac{d\pi_i(t)}{dt} = \sum_{j} \left[ \pi_j(t) W_{ji} - \pi_i(t) W_{ij} \right],
 \end{equation}
 
-assicurando che la distribuzione stazionaria della catena di Markov sia quella canonica.
+dove \(W_{ij}\) rappresenta la probabilità di transizione per unità di tempo dalla configurazione \(C_i\) 
+alla configurazione \(C_j\). Il primo termine descrive i flussi di probabilità entranti nello stato \(i\), 
+mentre il secondo quelli uscenti.
 
-Un’unità temporale Monte Carlo (MC sweep) corrisponde a $N=L^2$ tentativi di aggiornamento, così che in media ogni spin venga considerato una volta.
+Una distribuzione \(\pi_i^{(\text{eq})}\) è detta stazionaria se soddisfa:
+
+\begin{equation}
+\frac{d\pi_i(t)}{dt} = 0 \quad \forall i.
+\end{equation}
+
+Per assicurare che la distribuzione stazionaria coincida con la distribuzione canonica di Boltzmann,
+
+\begin{equation}
+\pi_i^{(\text{eq})} = \frac{1}{Z} e^{-\beta E_i},
+\end{equation}
+
+è sufficiente imporre la condizione di \textbf{bilancio dettagliato}:
+
+\begin{equation}
+\pi_i^{(\text{eq})} W_{ij} = \pi_j^{(\text{eq})} W_{ji}.
+\end{equation}
+
+Da questa relazione segue immediatamente:
+
+\begin{equation}
+\frac{W_{ij}}{W_{ji}} = \frac{\pi_j^{(\text{eq})}}{\pi_i^{(\text{eq})}} 
+= e^{-\beta (E_j - E_i)}.
+\end{equation}
+
+Il bilancio dettagliato è una condizione sufficiente (ma non necessaria) per garantire la convergenza 
+della catena di Markov alla distribuzione di Boltzmann.
+
+\subsection{Algoritmo di Metropolis--Hastings}
+
+L’algoritmo di Metropolis--Hastings costruisce una dinamica di Markov imponendo una particolare 
+fattorizzazione della probabilità di transizione:
+
+\begin{equation}
+W_{ij} = g_{ij} A_{ij},
+\end{equation}
+
+dove \(g_{ij}\) è la probabilità di selezionare la configurazione candidata \(C_j\) a partire da \(C_i\), 
+mentre \(A_{ij}\) è la probabilità di accettare la transizione. Nel caso dell’algoritmo di Metropolis, 
+la proposta è simmetrica, ovvero \(g_{ij} = g_{ji}\).
+
+Imponendo il bilancio dettagliato, si ottiene la seguente forma per la probabilità di accettazione:
+
+\begin{equation}
+A_{ij} = \min\left(1, e^{-\beta (E_j - E_i)}\right).
+\end{equation}
+
+Questo criterio garantisce che le transizioni che abbassano l’energia siano sempre accettate, 
+mentre quelle che aumentano l’energia siano accettate con una probabilità esponenzialmente soppressa.
+
+L'algoritmo procede nel seguente modo:
+\begin{enumerate}
+    \item Si seleziona casualmente un sito \(i\) 
+    \item Si propone di flipare lo spin in quel sito, generando una nuova configurazione \(C_j\).
+    \item Si calcola la variazione di energia \(\Delta E = E_{\text{new}} - E_{\text{old}}\) associata al flip.
+    \item Si accetta il flip con probabilità \(A_{ij}\).
+\end{enumerate}
 
 \subsection{Dettagli sull'implementazione}
 
-Le simulazioni sono state eseguite su un reticolo quadrato $L \times L$ con condizioni al contorno periodiche, in modo da minimizzare effetti di bordo.
-
-Per ogni temperatura:
-
+Le simulazioni sono state eseguite su un reticolo quadrato $L \times L$ con due valori $L = 30$ e $50$. Le condizioni al contorno sono state scelte periodiche di modo che fossero minimizzati gli effetti di bordo.
+Inoltre per ogni temperatura:
 \begin{itemize}
-    \item È stata effettuata una fase iniziale di termalizzazione, durante la quale le configurazioni non sono state utilizzate per il calcolo delle medie.
-    \item Successivamente sono state raccolte configurazioni separate da un numero di 50 sweep per ridurre le correlazioni temporali.
+    \item \textbf{Termalizzazione:} I passi iniziali vengono scartati per permettere al sistema di raggiungere l'equilibrio termodinamico partendo da una configurazione arbitraria.
+    \item \textbf{Autocorrelazione:} Per ottenere campioni indipendenti, le osservabili vengono misurate ogni 50 Monte Carlo Sweep, corrispondente a $N$ tentativi di flip.
 \end{itemize}
 
 Le grandezze fisiche calcolate sono:
@@ -67,11 +130,13 @@ C_V = \frac{\beta^2}{N} \left( \langle E^2 \rangle - \langle E \rangle^2 \right)
 \chi = \frac{\beta}{N} \left( \langle M^2 \rangle - \langle M \rangle^2 \right)
 \end{equation}
 
-Inoltre si è stimata la temperatura critica $T_c$ utilizzando il metodo di finite-size scaling, analizzando la posizione del picco della suscettibilità in funzione della dimensione del sistema.
+Inoltre si è stimata la temperatura critica $T_c$ analizzando la posizione del picco della suscettibilità e della capacità termica, cosniderando la largezza a mezza altezza del picco come stima dell'errore su $T_c$. Gli errori statistici per le altre grandezze 
+sono stati stimati considerando campioni indipendenti e utilizzando l'errore sulla media: ovvero la deviazione 
+standard divisa per la radice del numero di campioni indipendenti.
 
-Gli errori statistici sono stati stimati considerando campioni indipendenti e utilizzando l'errore sulla media: ovvero la deviazione standard divisa per la radice del numero di campioni indipendenti.
+Il codice è stato implementato in Python ed è disponibile su Github: \href{https://github.com/rpivi/Ising}{repository GitHub di rpivi}
 
-\section{Risultati della simulazione}
+\subsection{Risultati della simulazione}
 
 La Figura \ref{fig:simultation_one} mostra l’evoluzione temporale di energia e magnetizzazione per due diverse condizioni iniziali: configurazione ordinata (tutti spin up) e configurazione casuale.
 
@@ -96,8 +161,11 @@ Si osserva che, dopo un certo numero di sweep Monte Carlo, entrambe le evoluzion
     \label{fig:simultation_one}
 \end{figure}
 
-La Figura \ref{fig:simulation_two} riporta energia media e magnetizzazione media in funzione della temperatura. 
-
+La Figura \ref{fig:simulation_two} riporta energia media e magnetizzazione media in funzione della temperatura. Si osserva 
+chiaramente la transizione di fase: a basse temperature il sistema si trova in una fase ordinata con magnetizzazione non nulla,
+mentre a temperature superiori alla temperatura critica $T_c$ la magnetizzazione media si annulla,
+ indicando una fase disordinata. Inoltre l'energia media mostra un comportamento caratteristico, con una variazione più rapida in prossimità di $T_c$,
+passando da un regime a bassa energia a uno a energia più elevata.
 
 \begin{figure}[H]
     \centering
@@ -117,15 +185,26 @@ La Figura \ref{fig:simulation_two} riporta energia media e magnetizzazione media
     \caption{Energia media e magnetizzazione media in funzione della temperatura.}
     \label{fig:simulation_two}
 \end{figure}
-
-L’energia varia in modo regolare e continuo, mentre la magnetizzazione mostra un comportamento tipico di una transizione di fase: per basse temperature il sistema presenta ordine ferromagnetico con $\langle |M| \rangle \neq 0$, mentre al di sopra di una temperatura critica $T_c$ la magnetizzazione si annulla nel limite termodinamico.
-
-La Figura \ref{fig:simultation_three} mostra il calore specifico e la suscettibilità. Entrambe le quantità presentano un picco in corrispondenza della temperatura critica. 
-
-Il picco del calore specifico è associato alle fluttuazioni energetiche, mentre quello della suscettibilità è legato alle fluttuazioni della magnetizzazione. L’aumento delle fluttuazioni in prossimità di $T_c$ è una firma della criticità del sistema.
-
-Nel limite di sistema infinito, tali grandezze presentano un comportamento non analitico; nel sistema finito simulato si osserva invece un massimo arrotondato, la cui altezza cresce all’aumentare di $L$.
-
+ 
+La Figura \ref{fig:simultation_three} mostra il calore specifico e la suscettibilità in funzione della temperatura. Entrambe 
+le grandezze presentano un picco in prossimità della temperatura critica $T_c$, che è una caratteristica distintiva delle transizioni di fase di secondo ordine. Il picco del calore specifico è associato a forti fluttuazioni di energia, mentre il picco della suscettibilità è legato a forti fluttuazioni di magnetizzazione. 
+La posizione del picco fornisce una stima della temperatura critica, mentre la larghezza del picco può essere utilizzata
+per stimare l'errore su $T_c$, portando ai seguenti risultati:
+\begin{table}[H]
+    \centering
+    \begin{tabular}{c c c}
+    \hline
+    \textbf{Dimensione $L$} & \textbf{Osservabile} & \textbf{$T_c$} \\
+    \hline
+    30 & $\chi$   & $2.3 \pm 0.1$ \\
+    30 & $C_V$    & $2.3 \pm 0.2$ \\
+    50 & $\chi$   & $2.27 \pm 0.06$ \\
+    50 & $C_V$    & $2.3 \pm 0.1$ \\
+    \hline
+    \end{tabular}
+    \caption{Stima della temperatura critica $T_c$ ottenuta dal picco della suscettibilità $\chi$ e del calore specifico $C_V$ per diverse dimensioni del sistema.}
+    \label{tab:tc_estimates}
+    \end{table}
 \begin{figure}[H]
     \centering
     \begin{subfigure}{0.48\textwidth}
@@ -148,7 +227,7 @@ Nel limite di sistema infinito, tali grandezze presentano un comportamento non a
 Infine la Figura \ref{fig:configs_plot} mostra tre configurazioni di spin campionate a temperature diverse: una nella fase ferromagnetica ($T < T_c$), una in prossimità della transizione ($T \approx T_c$) e una nella fase paramagnetica ($T > T_c$).
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.6\textwidth]{configurations.png}
+    \includegraphics[width=0.9\textwidth]{configurations.png}
     \caption{Tre configurazioni di spin campionate a temperature diverse: $T < T_c$, $T \approx T_c$ e $T > T_c$.}
     \label{fig:configs_plot}
 \end{figure}
