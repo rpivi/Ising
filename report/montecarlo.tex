@@ -1,99 +1,110 @@
 \section{Metodo Monte Carlo}
 
-Lo studio del modello di Ising mediante simulazioni numeriche si basa su tecniche di campionamento stocastico. 
-L’obiettivo è generare configurazioni di spin distribuite secondo la distribuzione di Boltzmann. Poiché il numero totale di configurazioni cresce come $2^N$, un campionamento esaustivo è impraticabile per sistemi macroscopici. 
-Si utilizza quindi il metodo Monte Carlo con algoritmo di Metropolis per costruire una catena di Markov che converga alla distribuzione canonica.
+Lo studio del modello di Ising mediante simulazioni numeriche si basa su tecniche 
+di campionamento stocastico. L'obiettivo è generare configurazioni di spin distribuite 
+secondo la distribuzione di Boltzmann. Poiché il numero totale di configurazioni cresce 
+come $2^N$, un campionamento esaustivo è impraticabile per sistemi macroscopici. 
+Si utilizza quindi il metodo Monte Carlo con algoritmo di Metropolis per costruire una 
+catena di Markov che converga alla distribuzione canonica.
 
 \subsection{Processi e catene di Markov}
 
-Un processo di Markov è un processo stocastico caratterizzato dalla proprietà di assenza di memoria: 
-l’evoluzione futura del sistema dipende esclusivamente dallo stato corrente e non dalla storia passata. 
-Nel contesto delle simulazioni Monte Carlo, l’insieme delle configurazioni microscopiche del sistema 
-\(\{C\}\) costituisce lo spazio degli stati, mentre la dinamica è descritta da una catena di Markov discreta 
-nel tempo.
+Un processo di Markov è un processo stocastico caratterizzato dalla proprietà di assenza 
+di memoria \cite{quantum_mc}: l'evoluzione futura del sistema dipende esclusivamente dallo 
+stato corrente e non dalla storia passata.
+\begin{equation}
+P(X_{n+1} | X_n, X_{n-1}, \ldots, X_0) = P(X_{n+1} | X_n).
+\end{equation}
+Dove $X_n$ rappresenta lo stato del sistema al tempo $n$. Questa proprietà semplifica 
+notevolmente l'analisi dei processi stocastici.
 
-Una catena di Markov è definita da una matrice di transizione \(P(C_i \to C_j)\), che rappresenta la 
-probabilità di passare dalla configurazione \(C_i\) alla configurazione \(C_j\) in un singolo passo Monte Carlo. 
-Per garantire che la distribuzione di probabilità asintotica coincida con la distribuzione di Boltzmann, 
-la catena deve soddisfare due proprietà fondamentali:
+Nel contesto delle simulazioni Monte Carlo per il modello di Ising, l'insieme delle 
+configurazioni microscopiche del sistema $\{C\}$ costituisce lo spazio degli stati, 
+mentre la dinamica è descritta da una catena di Markov discreta nel tempo.
+
+Una catena di Markov è definita da una matrice di transizione $P_{ij} = P(C_j|C_i)$, 
+che rappresenta la probabilità di passare dalla configurazione $C_i$ alla configurazione 
+$C_j$ in un singolo passo Monte Carlo. La matrice di transizione è una matrice stocastica, 
+ovvero ogni riga deve sommare a 1:
+\begin{equation}
+\sum_{j} P_{ij} = 1 \quad \forall i.
+\end{equation}
+La catena è generata ricorsivamente a partire da una configurazione iniziale $C_0$ e 
+applicando iterativamente la matrice di transizione:
+\begin{equation}
+    p_i^{(n+1)} = \sum_{j} P_{ji}\, p_j^{(n)},
+\end{equation}
+dove $p_i^{(n)}$ è la probabilità di essere nella configurazione $C_i$ al tempo $n$.
+Per garantire che la distribuzione di probabilità asintotica coincida con la distribuzione 
+di Boltzmann, la catena deve soddisfare due proprietà fondamentali:
 
 \begin{itemize}
-    \item \textbf{Ergodicità:} ogni configurazione deve essere raggiungibile da qualunque altra in un numero finito di passi.
+    \item \textbf{Ergodicità:} ogni configurazione deve essere raggiungibile da qualunque 
+    altra in un numero finito di passi.
     \item \textbf{Aperiodicità:} il sistema non deve essere intrappolato in cicli deterministici.
 \end{itemize}
 
-Nel modello di Ising con dinamica di flip di singolo spin, entrambe le condizioni sono soddisfatte, 
-garantendo l’esistenza di una distribuzione stazionaria unica.
+Nel modello di Ising con dinamica di flip di singolo spin, entrambe le condizioni sono 
+soddisfatte, garantendo l'esistenza di una distribuzione stazionaria unica.
 
 \subsection{Master equation e bilancio dettagliato}
 
-L’evoluzione temporale della probabilità \(\pi_i(t)\) di trovare il sistema nella configurazione \(C_i\) 
-è descritta dalla \textbf{Master Equation}, che in forma continua può essere scritta come:
-
+L'evoluzione temporale della probabilità $p_i(t)$ di trovare il sistema nella 
+configurazione $C_i$ è descritta dalla Master Equation, che in forma continua può essere 
+scritta come:
 \begin{equation}
-\frac{d\pi_i(t)}{dt} = \sum_{j} \left[ \pi_j(t) W_{ji} - \pi_i(t) W_{ij} \right],
+\frac{d p_i(t)}{dt} = \sum_{j} \left( P_{ji}\, p_j(t) - P_{ij}\, p_i(t) \right),
 \end{equation}
+dove $P_{ij}$ rappresenta il tasso di transizione per unità di tempo dalla configurazione 
+$C_i$ alla configurazione $C_j$. Il primo termine descrive i flussi di probabilità 
+entranti nello stato $i$, mentre il secondo quelli uscenti.
 
-dove \(W_{ij}\) rappresenta la probabilità di transizione per unità di tempo dalla configurazione \(C_i\) 
-alla configurazione \(C_j\). Il primo termine descrive i flussi di probabilità entranti nello stato \(i\), 
-mentre il secondo quelli uscenti.
-
-Una distribuzione \(\pi_i^{(\text{eq})}\) è detta stazionaria se soddisfa:
-
+Una distribuzione $p_i^{(\text{eq})}$ è detta stazionaria se soddisfa:
 \begin{equation}
-\frac{d\pi_i(t)}{dt} = 0 \quad \forall i.
+\frac{d p_i(t)}{dt} = 0 \quad \forall i.
 \end{equation}
-
-Per assicurare che la distribuzione stazionaria coincida con la distribuzione canonica di Boltzmann,
-
+Per assicurare che la distribuzione stazionaria coincida con la distribuzione canonica 
+di Boltzmann,
 \begin{equation}
-\pi_i^{(\text{eq})} = \frac{1}{Z} e^{-\beta E_i},
+p_i^{(\text{eq})} = \frac{1}{Z} e^{-\beta E_i},
 \end{equation}
-
-è sufficiente imporre la condizione di \textbf{bilancio dettagliato}:
-
+è sufficiente imporre la condizione di bilancio dettagliato:
 \begin{equation}
-\pi_i^{(\text{eq})} W_{ij} = \pi_j^{(\text{eq})} W_{ji}.
+p_i^{(\text{eq})}\, P_{ij} = p_j^{(\text{eq})}\, P_{ji}.
 \end{equation}
-
 Da questa relazione segue immediatamente:
-
 \begin{equation}
-\frac{W_{ij}}{W_{ji}} = \frac{\pi_j^{(\text{eq})}}{\pi_i^{(\text{eq})}} 
+\frac{P_{ij}}{P_{ji}} = \frac{p_j^{(\text{eq})}}{p_i^{(\text{eq})}} 
 = e^{-\beta (E_j - E_i)}.
 \end{equation}
-
-Il bilancio dettagliato è una condizione sufficiente (ma non necessaria) per garantire la convergenza 
-della catena di Markov alla distribuzione di Boltzmann.
+Il bilancio dettagliato è una condizione sufficiente (ma non necessaria) per garantire 
+la convergenza della catena di Markov alla distribuzione di Boltzmann.
 
 \subsection{Algoritmo di Metropolis--Hastings}
 
-L’algoritmo di Metropolis--Hastings costruisce una dinamica di Markov imponendo una particolare 
-fattorizzazione della probabilità di transizione:
-
+L'algoritmo di Metropolis--Hastings costruisce una dinamica di Markov imponendo una 
+particolare fattorizzazione della probabilità di transizione:
 \begin{equation}
-W_{ij} = g_{ij} A_{ij},
+P_{ij} = T_{ij}\, A_{ij},
 \end{equation}
-
-dove \(g_{ij}\) è la probabilità di selezionare la configurazione candidata \(C_j\) a partire da \(C_i\), 
-mentre \(A_{ij}\) è la probabilità di accettare la transizione. Nel caso dell’algoritmo di Metropolis, 
-la proposta è simmetrica, ovvero \(g_{ij} = g_{ji}\).
-
-Imponendo il bilancio dettagliato, si ottiene la seguente forma per la probabilità di accettazione:
-
+dove $T_{ij}$ è la probabilità di selezionare la configurazione candidata $C_j$ a 
+partire da $C_i$, mentre $A_{ij}$ è la probabilità di accettare la transizione. 
+Nel caso dell'algoritmo di Metropolis, la proposta è simmetrica, ovvero $T_{ij} = T_{ji}$.
+Si può ottenere la seguente forma per la probabilità di accettazione:
 \begin{equation}
-A_{ij} = \min\left(1, e^{-\beta (E_j - E_i)}\right).
+A_{ij} = \min\left(1,\, e^{-\beta (E_j - E_i)}\right).
 \end{equation}
-
-Questo criterio garantisce che le transizioni che abbassano l’energia siano sempre accettate, 
-mentre quelle che aumentano l’energia siano accettate con una probabilità esponenzialmente soppressa.
+Questo criterio garantisce che le transizioni che abbassano l'energia siano sempre 
+accettate, mentre quelle che aumentano l'energia siano accettate con una probabilità 
+esponenzialmente soppressa.
 
 L'algoritmo procede nel seguente modo:
 \begin{enumerate}
-    \item Si seleziona casualmente un sito \(i\) 
-    \item Si propone di flipare lo spin in quel sito, generando una nuova configurazione \(C_j\).
-    \item Si calcola la variazione di energia \(\Delta E = E_{\text{new}} - E_{\text{old}}\) associata al flip.
-    \item Si accetta il flip con probabilità \(A_{ij}\).
+    \item Si seleziona casualmente un sito $i$.
+    \item Si propone di flipare lo spin in quel sito, generando una nuova configurazione $C_j$.
+    \item Si calcola la variazione di energia $\Delta E = E_{\text{new}} - E_{\text{old}}$ 
+    associata al flip.
+    \item Si accetta il flip con probabilità $A_{ij}$.
 \end{enumerate}
 
 \subsection{Dettagli sull'implementazione}
@@ -130,7 +141,8 @@ C_V = \frac{\beta^2}{N} \left( \langle E^2 \rangle - \langle E \rangle^2 \right)
 \chi = \frac{\beta}{N} \left( \langle M^2 \rangle - \langle M \rangle^2 \right)
 \end{equation}
 
-Inoltre si è stimata la temperatura critica $T_c$ analizzando la posizione del picco della suscettibilità e della capacità termica, cosniderando la largezza a mezza altezza del picco come stima dell'errore su $T_c$. Gli errori statistici per le altre grandezze 
+Inoltre si è stimata la temperatura critica $T_c$ analizzando la posizione del picco della suscettibilità e della capacità termica, 
+considerando la largezza a mezza altezza del picco come stima dell'errore su $T_c$. Gli errori statistici per le altre grandezze 
 sono stati stimati considerando campioni indipendenti e utilizzando l'errore sulla media: ovvero la deviazione 
 standard divisa per la radice del numero di campioni indipendenti.
 
