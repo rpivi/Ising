@@ -12,7 +12,7 @@ Il progetto studia la transizione di fase ferromagnetica–paramagnetica attrave
 - **Simulazioni Monte Carlo** — algoritmo di Metropolis–Hastings per il campionamento della distribuzione di Boltzmann
 - **PCA** — identificazione del parametro d'ordine e della transizione di fase tramite apprendimento non supervisionato.
   
-La relazione sul progetto è disponibile cliccando sul link: [Relazione(PDF)](report/main.pdf) 
+- La relazione sul progetto è disponibile cliccando sul link: [Relazione(PDF)](report/main.pdf) 
 ---
 
 ## Il modello
