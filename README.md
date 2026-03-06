@@ -10,7 +10,8 @@ Il progetto studia la transizione di fase ferromagnetica–paramagnetica attrave
 
 - **Teoria di campo medio** — soluzione analitica approssimata e stima della temperatura critica
 - **Simulazioni Monte Carlo** — algoritmo di Metropolis–Hastings per il campionamento della distribuzione di Boltzmann
-- **PCA** — identificazione del parametro d'ordine e della transizione di fase tramite apprendimento non supervisionato
+- **PCA** — identificazione del parametro d'ordine e della transizione di fase tramite apprendimento non supervisionato.
+  
 La relazione sul progetto è disponibile cliccando sul link: [Relazione(PDF)](report/main.pdf) 
 ---
 
