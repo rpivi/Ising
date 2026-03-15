@@ -45,7 +45,7 @@ Le simulazioni sono state condotte su reticoli $L = 30$ e $L = 50$, calcolando l
 |---|---|
 | Energia media | $\langle E \rangle$ |
 | Magnetizzazione | $\langle \|M\| \rangle$ |
-| Calore specifico | $C_V = \frac{\beta^2}{N}(\langle E^2 \rangle - \langle E \rangle^2)$ |
+| Capacità termica| $C_V / k_b= \frac{\beta^2}{N}(\langle E^2 \rangle - \langle E \rangle^2)$ |
 | Suscettività | $\chi = \frac{\beta}{N}(\langle M^2 \rangle - \langle M \rangle^2)$ |
 
 ### Stima della temperatura critica
