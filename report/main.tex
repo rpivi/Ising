@@ -1,6 +1,5 @@
 \documentclass[12pt]{article}
 
-
 \usepackage[colorlinks=true, linkcolor=blue, urlcolor=red]{hyperref}
 
 \usepackage[
@@ -8,9 +7,13 @@
   top=2cm,
   bottom=2cm
 ]{geometry}
+
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[italian]{babel}
+
+\usepackage{lmodern} % font scalabile Latin Modern
+\usepackage{microtype} % microtype ora funziona senza errori
 
 \usepackage{amsmath,amssymb,amsfonts}
 \usepackage{graphicx}
@@ -19,8 +22,6 @@
 \usepackage{float}
 \usepackage{fancyhdr}
 \usepackage[nottoc,notlot,notlof]{tocbibind}
-
-\usepackage{microtype} 
 
 \title{Modello di Ising}
 \author{Pivi Riccardo}
@@ -33,17 +34,11 @@
 \newpage
 
 \input{introduzione.tex}
-
 \input{modello_Ising.tex}
-
 \input{campo_medio.tex}
-
 \input{montecarlo.tex}
-
 \input{pca.tex}
-
 \input{conclusioni.tex}
-
 \input{appendice.tex}
 
 \bibliographystyle{unsrt}
