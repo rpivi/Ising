@@ -62,7 +62,7 @@ I risultati sono compatibili con il valore esatto di Onsager entro gli errori st
 ### PCA
 
 Applicando la PCA alle configurazioni Monte Carlo:
-![PCA](source/figures/PCA_.png)
+![PCA](source/figures/PCA_spins_configurations.png)
 
 
 - La **prima componente principale** è correlata quasi perfettamente con la magnetizzazione ($r \approx 1$)
