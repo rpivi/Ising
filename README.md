@@ -62,6 +62,8 @@ I risultati sono compatibili con il valore esatto di Onsager entro gli errori st
 ### PCA
 
 Applicando la PCA alle configurazioni Monte Carlo:
+![PCA](source/figures/PCA_.png)
+
 
 - La **prima componente principale** è correlata quasi perfettamente con la magnetizzazione ($r \approx 1$)
 - La **seconda componente principale** riflette il comportamento della suscettività ($r \approx 0.7$)
